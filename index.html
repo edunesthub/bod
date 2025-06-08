@@ -1,0 +1,2811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Chawp BOD Portal</title>
+    <link rel="manifest" href="/manifest.json">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { 
+            background: #1c1c1e; 
+            color: #e0e0e0; 
+            font-family: 'SF Pro Display', sans-serif; 
+            margin: 0; 
+            padding: 0 0 20px 0; 
+            min-height: 100vh; 
+            -webkit-user-select: none; 
+            -ms-user-select: none; 
+            user-select: none; 
+            -webkit-touch-callout: none; 
+            overflow-x: hidden; 
+        }
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 30px 20px; 
+            position: relative; 
+            transition: margin-left 0.3s ease;
+        }
+        .section { 
+            background: #252527; 
+            border-radius: 20px; 
+            padding: 30px; 
+            margin-bottom: 20px; 
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6); 
+            transition: transform 0.3s ease, opacity 0.3s ease; 
+        }
+        .section.hidden { 
+            transform: translateY(20px); 
+            opacity: 0; 
+            pointer-events: none; 
+        }
+        h1 { 
+            font-size: clamp(1.5rem, 5vw, 2.5rem); 
+            font-weight: 700; 
+            letter-spacing: -2px;
+            margin: 0;
+            background: linear-gradient(45deg, #007aff, #34c759, #007aff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 4px 20px rgba(0, 122, 255, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+        h2 { 
+            font-size: clamp(1.25rem, 3vw, 1.75rem); 
+            font-weight: 600; 
+            margin-bottom: 20px; 
+            text-align: center; 
+            color: #ffffff; 
+        }
+        h4 { 
+            margin: 0 0 10px; 
+            font-size: clamp(1rem, 2.5vw, 1.25rem); 
+            font-weight: 600; 
+            color: #ffffff; 
+        }
+        p { 
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem); 
+            opacity: 1; 
+            color: #d0d0d0; 
+        }
+        .btn { 
+            background: linear-gradient(45deg, #34c759, #007aff);
+            color: white;
+            border: none; 
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer; 
+            width: 100%; 
+            font-size: 16px;
+            transition: all 0.3s;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-primary { 
+            background: #dc2626;
+            color: white;
+            border: none; 
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer; 
+            width: 100%; 
+            font-size: 16px;
+            transition: all 0.3s;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn:hover { 
+            background: linear-gradient(135deg, #34c759, #007aff);
+            transform: translateY(-2px); 
+            box-shadow: 0 6px 15px rgba(255, 45, 85, 0.4);
+        }
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(45, 174, 255, 0.2);
+        }
+        .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-spinner {
+            display: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 8px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .btn-secondary { 
+            background: #30c8ff; 
+            padding: 8px 18px; 
+            width: auto;
+        }
+        .btn-secondary:hover { 
+            background: #26a5dc; 
+        }
+        .btn-tertiary {
+            background: #6b7280;
+            padding: 8px 18px;
+            width: auto;
+        }
+        .btn-tertiary:hover {
+            background: #4b5563;
+        }
+        .input { 
+            background: #343436; 
+            border: none; 
+            color: #ccc; 
+            padding: 14px; 
+            border-radius: 12px; 
+            width: 100%; 
+            margin-bottom: 15px; 
+            font-size: clamp(0.875rem, 2.5vw, 1rem); 
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3); 
+            transition: background 0.2s ease, transform 0.2s ease; 
+        }
+        .input:focus { 
+            background: #3a3a3c; 
+            outline: none; 
+            transform: scale(1.02); 
+        }
+        .notification { 
+            position: fixed; 
+            top: 20px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            background: rgba(52, 199, 89, 0.9);
+            color: white;
+            padding: 12px 15px;
+            border-radius: 10px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border-left: 4px solid #34C759;
+            z-index: 1000; 
+            opacity: 0; 
+            transition: opacity 0.3s ease; 
+        }
+        .notification.show { 
+            opacity: 1; 
+        }
+        .notification.error { 
+            background: rgba(255, 59, 48, 0.9);
+            border-left-color: #FF3B30;
+        }
+        .notification-icon {
+            font-size: 18px;
+        }
+        .item { 
+            background: #2c2c2e; 
+            padding: 20px; 
+            border-radius: 14px; 
+            margin-bottom: 15px; 
+            transition: transform 0.2s ease, box-shadow 0.2s ease; 
+        }
+        .item:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4); 
+        }
+        .item h4 { 
+            margin: 0 0 10px; 
+            font-size: clamp(1rem, 2.5vw, 1.25rem); 
+            font-weight: 600; 
+            color: #ffffff; 
+        }
+        .item p { 
+            margin: 5px 0; 
+            font-size: clamp(0.85rem, 2vw, 0.95rem); 
+            color: #d0d0d0; 
+        }
+        .item-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 240px;
+    height: 100%;
+    background: rgba(15, 15, 17, 0.98);
+    backdrop-filter: blur(8px);
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+                position: fixed;
+            top: 0;
+            left: -250px;
+            width: 250px;
+            height: 100%;
+            background: rgba(44, 44, 46, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 20px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: 2px 0 40px rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            transition: left 0.3s ease;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .sidebar.open {
+            left: 0;
+        }
+        .sidebar-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: #007aff;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            z-index: 1100;
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+        }
+        .sidebar-toggle:hover {
+            background: #005bb5;
+            transform: scale(1.1);
+        }
+        .sidebar button {
+            background: none;
+            color: #b0b0b0;
+            padding: 20px;
+            font-size: clamp(0.9rem, 2vw, 1rem);
+            font-weight: 500;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-align: left;
+            width: 100%;
+        }
+        .sidebar button i {
+            font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+        }
+        .sidebar button.active {
+            background: #007aff;
+            color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 122, 255, 0.4);
+        }
+        .sidebar button:hover:not(.active) {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+            transition: opacity 0.3s ease;
+        }
+        .overlay.active {
+            display: block;
+            opacity: 1;
+        }
+        #login-section { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 20px; 
+            background: linear-gradient(135deg, #1c1c1e 0%, #252527 100%); 
+            z-index: 2000; 
+            overflow: hidden; 
+        }
+        #login-section::before { 
+            content: ''; 
+            position: absolute; 
+            top: -50%; 
+            left: -50%; 
+            width: 200%; 
+            height: 200%; 
+            background: radial-gradient(circle, rgba(0, 122, 255, 0.1) 0%, transparent 70%); 
+            animation: pulse 10s infinite; 
+            z-index: 0; 
+        }
+        #login-section .login-container { 
+            background: #2c2c2e; 
+            border-radius: 20px; 
+            padding: 40px; 
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6); 
+            width: 100%; 
+            max-width: 400px; 
+            z-index: 1; 
+            animation: fadeIn 0.5s ease; 
+        }
+        #login-section h1 { 
+            font-size: clamp(1.5rem, 5vw, 2.5rem); 
+            font-weight: 700; 
+            text-align: center; 
+            margin-bottom: 30px; 
+            background: linear-gradient(45deg, #007aff, #34c759); 
+            -webkit-background-clip: text; 
+            background-clip: text; 
+            color: transparent; 
+        }
+        #login-section.hidden { 
+            display: none; 
+        }
+        .user-item {
+            background: #2c2c2e;
+            padding: 20px;
+            border-radius: 14px;
+            margin-bottom: 15px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 15px;
+            align-items: center;
+        }
+        .user-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+        }
+        .user-details {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .user-details h4 {
+            margin: 0;
+            font-size: clamp(1rem, 2.5vw, 1.25rem);
+            font-weight: 600;
+            color: #ffffff;
+        }
+        .user-details p {
+            margin: 0;
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
+            color: #d0d0d0;
+            word-break: break-word;
+        }
+        .user-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .dashboard-card {
+            background: #2c2c2e;
+            padding: 25px;
+            border-radius: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+        .dashboard-card:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+        }
+        .dashboard-card.restaurants:after { 
+            background: linear-gradient(90deg, #FF9500, #FF2D55); 
+            box-shadow: 0 0 15px rgba(255, 149, 0, 0.3);
+        }
+        .dashboard-card.vendors:after { 
+            background: linear-gradient(90deg, #5AC8FA, #007AFF); 
+            box-shadow: 0 0 15px rgba(90, 200, 250, 0.3);
+        }
+        .dashboard-card.orders:after { 
+            background: linear-gradient(90deg, #34C759, #32D74B); 
+            box-shadow: 0 0 15px rgba(52, 199, 89, 0.3);
+        }
+        .dashboard-card.users:after { 
+            background: linear-gradient(90deg, #AF52DE, #5E5CE6); 
+            box-shadow: 0 0 15px rgba(175, 82, 222, 0.3);
+        }
+        .dashboard-card.deliveries:after { 
+            background: linear-gradient(90deg, #FF2D55, #FF9500); 
+            box-shadow: 0 0 15px rgba(255, 45, 85, 0.3);
+        }
+        .dashboard-card h3 {
+            font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 6px;
+            position: relative;
+            z-index: 1;
+        }
+        .dashboard-card .subtitle {
+            font-size: 0.85rem;
+            color: #a0a0a0;
+            margin-bottom: 15px;
+        }
+        .dashboard-card p {
+            font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+            font-weight: 700;
+            margin: 0;
+            position: relative;
+            z-index: 1;
+        }
+        .dashboard-card.restaurants p { background: linear-gradient(45deg, #FF9500, #FF2D55); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .dashboard-card.vendors p { background: linear-gradient(45deg, #5AC8FA, #007AFF); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .dashboard-card.orders p { background: linear-gradient(45deg, #34C759, #32D74B); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .dashboard-card.users p { background: linear-gradient(45deg, #AF52DE, #5E5CE6); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .dashboard-card.deliveries p { background: linear-gradient(45deg, #FF2D55, #FF9500); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .dashboard-card i {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 1.5rem;
+            opacity: 0.2;
+            color: #ffffff;
+        }
+        .mini-chart {
+            width: 100%;
+            height: 15px !important;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            max-height: 15px !important;
+            overflow: hidden;
+            border-radius: 5px;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+        }
+        .tooltip {
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 100;
+            white-space: nowrap;
+        }
+        .tooltip:after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 6px solid rgba(0, 0, 0, 0.8);
+        }
+        .dashboard-card:hover .tooltip {
+            opacity: 1;
+            top: -50px;
+        }
+        .welcome-message {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01));
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .welcome-text {
+            flex: 1;
+        }
+        .welcome-text p {
+            font-size: 0.95rem;
+            color: #a0a0a0;
+            margin: 0;
+        }
+        .date-display {
+            font-size: 0.9rem;
+            color: #a0a0a0;
+            text-align: right;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        .password-wrapper {
+            position: relative;
+            width: 100%;
+        }
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #a0a0a0;
+            cursor: pointer;
+            z-index: 10;
+            padding: 8px;
+        }
+        .password-toggle:hover {
+            color: #ffffff;
+        }
+        .personnel-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
+            color: #d0d0d0;
+        }
+        .personnel-table th,
+        .personnel-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .personnel-table th {
+            color: #ffffff;
+            font-weight: 600;
+        }
+        .personnel-table .btn-secondary {
+            width: auto;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+        }
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+            margin: 10px 0;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #34C759;
+        }
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        @media (max-width: 768px) {
+            .container { 
+                padding: 20px 15px; 
+            }
+            .section { padding: 25px; }
+            .sidebar { width: 200px; }
+            .sidebar-toggle { 
+                padding: 8px; 
+                font-size: 1rem; 
+            }
+            .sidebar button { 
+                padding: 10px; 
+                font-size: clamp(0.85rem, 2vw, 0.95rem); 
+            }
+            .sidebar button i { 
+                font-size: clamp(1.1rem, 2vw, 1.3rem); 
+            }
+            #login-section .login-container { padding: 30px; }
+            .user-item { grid-template-columns: 1fr; }
+            .user-actions { margin-top: 10px; justify-content: flex-end; }
+            .personnel-table { font-size: 0.8rem; }
+            .personnel-table th, .personnel-table td { padding: 8px; }
+        }
+        @media (max-width: 480px) {
+            .container { 
+                padding: 15px 10px; 
+            }
+            .section { padding: 20px; }
+            .sidebar { width: 180px; }
+            .sidebar-toggle { 
+                padding: 6px; 
+                font-size: 0.9rem; 
+            }
+            .sidebar button { 
+                padding: 20px; 
+                font-size: clamp(0.9rem, 1.8vw, 0.9rem); 
+            }
+            .sidebar button i { 
+                font-size: clamp(1rem, 2vw, 1.2rem); 
+            }
+            #login-section .login-container { 
+                padding: 20px; 
+                max-width: 90%; 
+            }
+            .personnel-table { font-size: 0.75rem; }
+            .personnel-table th, .personnel-table td { padding: 6px; }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 0.3; }
+            100% { transform: scale(1); opacity: 0.5; }
+        }
+        html, body {
+            height: 100%;
+            min-height: -webkit-fill-available;
+            overscroll-behavior-y: none;
+            overflow-x: hidden;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            touch-action: manipulation;
+        }
+        body::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* --- Remove unused CSS for deleted sections --- */
+        .dashboard-card.deliveries:after { display: none !important; }
+        .dashboard-card.deliveries p { color: inherit !important; background: none !important; }
+        .mini-chart { display: none !important; }
+
+        /* Delivery Personnel List Section (only this part updated) */
+        h2.text-xl.font-semibold.mb-4 {
+            margin-bottom: 16px;
+            font-size: 1.5rem;
+        }
+        #personnel-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+            min-height: 60px;
+        }
+        #personnel-list div {
+            text-align: center;
+            color: #aaa;
+            padding: 20px 0;
+        }
+        /* Add or update these styles in your <style> tag */
+        .personnel-list-btn {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: linear-gradient(120deg, #232325 80%, #232325 100%);
+            border: none;
+            border-radius: 18px;
+            padding: 20px 22px;
+            margin-bottom: 0;
+            width: 100%;
+            font-size: 1.08rem;
+            color: #e0e0e0;
+            font-weight: 600;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+            transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+            cursor: pointer;
+            text-align: left;
+            position: relative;
+            min-height: 64px;
+            border: 1.5px solid #232325;
+            outline: none;
+            border-color: #30c8ff;
+        }
+        .personnel-list-btn:hover, .personnel-list-btn:focus {
+            background: linear-gradient(120deg, #2a2a2c 80%, #30c8ff 100%);
+            color: #fff;
+            transform: translateY(-2px) scale(1.01);
+            box-shadow: 0 6px 18px rgba(0,122,255,0.10);
+            border-color: #30c8ff;
+        }
+        .personnel-list-btn .fa-user {
+            color: #30c8ff;
+            font-size: 1.5rem;
+            background: #18181a;
+            border-radius: 50%;
+            padding: 10px;
+            box-shadow: 0 2px 8px rgba(48,200,255,0.10);
+        }
+        .personnel-list-btn .personnel-email {
+            font-weight: 700;
+            color: #fff;
+            font-size: 1.08rem;
+            letter-spacing: 0.01em;
+            word-break: break-all;
+        }
+        .personnel-list-btn .personnel-label {
+            background: #30c8ff;
+            color: #fff;
+            font-size: 0.85em;
+            border-radius: 8px;
+            padding: 2px 10px;
+            margin-left: 10px;
+            font-weight: 500;
+            letter-spacing: 0.01em;
+        }
+        .personnel-list-btn .status-dot {
+            margin-left: auto;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #34c759;
+            display: inline-block;
+            border: 2px solid #232325;
+            box-shadow: 0 0 0 2px #232325;
+        }
+        .personnel-list-btn .status-dot.inactive {
+            background: #ff3b30;
+        }
+        @media (max-width: 600px) {
+            #personnel-list { grid-template-columns: 1fr !important; }
+            .personnel-list-btn { padding: 14px 10px; font-size: 0.98rem; min-height: 54px; }
+        }
+
+    </style>
+</head>
+<body>
+    <div id="loading-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #1c1c1e; display: flex; align-items: center; justify-content: center; z-index: 3000;">
+        <h1 style="font-size: 3rem; font-weight: 600; letter-spacing: -2px; background: linear-gradient(45deg, #007aff, #34c759, #007aff); -webkit-background-clip: text; background-clip: text; color: transparent;">CHAWP</h1>
+    </div>
+
+    <button class="sidebar-toggle" id="sidebar-toggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="sidebar" id="sidebar">
+        <p></p><br><br>
+        <button id="dashboard-btn" class="active"><i class="fas fa-chart-line"></i> Dashboard</button>
+        <button id="users-btn"><i class="fas fa-users"></i> Users</button>
+        <button id="earnings-btn"><i class="fas fa-coins"></i> Earnings</button>
+        <button id="restaurants-btn"><i class="fas fa-store"></i> Restaurants</button>
+        <button id="vendor-mappings-btn"><i class="fas fa-user-tie"></i> Vendors</button>
+        <button id="orders-btn"><i class="fas fa-shopping-cart"></i> Orders</button>
+        <button id="delivery-btn"><i class="fas fa-motorcycle"></i> Delivery</button>
+        <button id="settings-btn"><i class="fas fa-cog"></i> Settings</button>
+        <button id="app-btn"><i class="fas fa-mobile-alt"></i> App</button>
+        <button id="fees-btn"><i class="fas fa-money-bill-wave"></i> Fees</button>
+        <button id="discounts-btn"><i class="fas fa-percentage"></i> Discounts</button>
+
+
+
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+
+    <div id="login-section" class="section" style="display: none;">
+        <div class="login-container">
+            <h1>Admin Portal</h1>
+            <div id="login-notification" class="notification" style="position: relative; width: 100%; display: none;">
+                <i class="fas fa-info-circle notification-icon"></i>
+                <span id="login-notification-message"></span>
+            </div>
+            <form id="login-form">
+                <input type="email" id="email" placeholder="Email" class="input">
+                <div class="password-wrapper">
+                    <input type="password" id="password" placeholder="Password" class="input">
+                    <button type="button" class="password-toggle" id="password-toggle">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+                <button type="submit" id="login-btn" class="btn">
+                    <span>Login</span>
+                    <span class="btn-spinner" id="login-spinner"></span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="main-content" class="container hidden">
+        <h1 class="text-4xl font-semibold text-center mb-4">Chawp BOD Portal</h1>
+        <p class="text-center text-gray-400 mb-12">Oversee the entire Chawp ecosystem.</p>
+
+        <div id="notification" class="notification"></div>
+
+        <div id="dashboard" class="section">
+            <div class="welcome-message">
+                <div class="welcome-text">
+                    <p>Here's what's happening with your platform today</p>
+                </div>
+                <div class="date-display" id="current-date">Loading...</div>
+            </div>
+            <div class="dashboard-grid" id="dashboard-grid"></div>
+        </div>
+
+       <div id="earnings" class="section hidden">
+    <h2 class="text-2xl font-semibold mb-4">Earnings Overview</h2>
+
+    <!-- Date Filter (Shared) -->
+    <div class="mb-4">
+        <select id="earnings-filter" class="input" style="max-width: 220px;">
+            <option value="all">All Time</option>
+            <option value="today">Today</option>
+            <option value="7days">Last 7 Days</option>
+            <option value="month">This Month</option>
+        </select>
+    </div>
+
+    <!-- Shared Dashboard -->
+    <div class="dashboard-grid mb-6" id="earnings-dashboard">
+        <div class="dashboard-card">
+            <h3>Total Revenue</h3>
+            <p id="total-revenue">GH₵0.00</p>
+        </div>
+        <div class="dashboard-card">
+            <h3>Pending Payouts</h3>
+            <p id="pending-payouts">GH₵0.00</p>
+        </div>
+    </div>
+
+    <!-- Tabs for Vendor / Delivery -->
+    <div class="flex mb-6 gap-4">
+        <button id="vendor-tab" class="btn btn-secondary">Vendor Earnings</button>
+        <button id="delivery-tab" class="btn btn-secondary">Delivery Earnings</button>
+    </div>
+
+    <div class="relative mb-4" style="text-align: right;">
+    <button id="export-toggle" class="btn btn-secondary" style="width: auto; padding: 10px 16px;">
+        <i class="fas fa-file-export mr-2"></i> Export <i class="fas fa-caret-down ml-2"></i>
+    </button>
+    <div id="export-menu" class="hidden absolute right-0 mt-2 w-40 bg-[#2c2c2e] border border-[#444] rounded-lg shadow-lg z-50">
+        <button id="export-csv-btn" class="w-full text-left px-4 py-2 hover:bg-[#3a3a3c] flex items-center gap-2">
+            <i class="fas fa-file-csv"></i> CSV
+        </button>
+        <button id="export-pdf-btn" class="w-full text-left px-4 py-2 hover:bg-[#3a3a3c] flex items-center gap-2">
+            <i class="fas fa-file-pdf"></i> PDF
+        </button>
+        <button id="export-excel-btn" class="w-full text-left px-4 py-2 hover:bg-[#3a3a3c] flex items-center gap-2">
+            <i class="fas fa-file-excel"></i> Excel
+        </button>
+    </div>
+</div>
+
+
+
+
+     <!-- Vendor Earnings List -->
+    <div id="vendor-earnings-group">
+        <h2 class="text-xl font-semibold mb-2">Vendor Earnings</h2>
+        <div id="vendor-earnings-list"></div>
+    </div>
+
+    <!-- Delivery Earnings List -->
+    <div id="delivery-earnings-group" style="display: none;">
+        <h2 class="text-xl font-semibold mb-2">Delivery Earnings</h2>
+        <div id="delivery-earnings-list">
+         <!-- delivery-earnings-list is dynamically filled by JS -->
+
+        </div>
+    </div>
+</div>
+
+
+
+        <div id="restaurants" class="section hidden">
+            <h2 class="text-2xl font-semibold mb-4">Manage Restaurants</h2>
+            <form id="restaurant-form" class="mb-6">
+                <input type="text" id="restaurant-name" placeholder="Restaurant Name" class="input">
+                <input type="text" id="restaurant-image" placeholder="Image URL" class="input">
+                <input type="number" id="delivery_time" placeholder="Delivery Time (minutes)" class="input" min="0">
+                <button type="submit" class="btn w-full">Add Restaurant</button>
+            </form>
+            <div id="restaurant-list"></div>
+        </div>
+
+        <div id="edit-restaurant" class="section hidden">
+            <h2 class="text-2xl font-semibold mb-4">Edit Restaurant</h2>
+            <form id="edit-restaurant-form" class="mb-6">
+                <input type="hidden" id="edit-restaurant-id">
+                <input type="text" id="edit-restaurant-name" placeholder="Restaurant Name" class="input">
+                <input type="text" id="edit-restaurant-image" placeholder="Image URL" class="input">
+                <input type="number" id="edit-delivery-time" placeholder="Delivery Time (minutes)" class="input" min="0">
+                <div class="toggle-switch">
+                    <input type="checkbox" id="edit-restaurant-status">
+                    <label class="slider" for="edit-restaurant-status"></label>
+                </div>
+                <p>Status: <span id="status-text">Closed</span></p>
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" class="btn">Save Changes</button>
+                    <button type="button" id="edit-menu-btn" class="btn btn-secondary">Edit Menu</button>
+                    <button type="button" id="cancel-edit" class="btn btn-tertiary">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="edit-menu" class="section hidden">
+            <h2 class="text-2xl font-semibold mb-4">Edit Menu</h2>
+            <input type="hidden" id="current-restaurant-id">
+            <form id="menu-item-form" class="mb-6">
+                <input type="text" id="menu-item-name" placeholder="Item Name" class="input">
+                <input type="number" id="menu-item-price" placeholder="Price (GH₵)" class="input" min="0" step="0.01">
+                <button type="submit" class="btn w-full">Add Menu Item</button>
+            </form>
+            <div id="menu-item-list"></div>
+            <button id="back-to-edit-restaurant" class="btn btn-tertiary mt-4">Back to Edit Restaurant</button>
+        </div>
+
+        <div id="vendor-mappings" class="section hidden">
+            <h2 class="text-2xl font-semibold mb-4">Vendor Mappings</h2>
+            <form id="vendor-mapping-form" class="mb-6">
+                <input type="email" id="vendor-email" placeholder="Vendor Email" class="input">
+                <select id="vendor-restaurant" class="input" 
+                style="padding: 16px 16px; font-size: 16px; border-radius: 8px; border: 1px solid #656565; width: 100%; max-width: 400px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <option value="" disabled selected>Select Restaurant</option>
+            </select>
+            
+                <button type="submit" class="btn w-full">Add Mapping</button>
+            </form>
+            <div id="vendor-mapping-list"></div>
+        </div>
+
+        <div id="orders" class="section hidden">
+            <h2 class="text-2xl font-semibold mb-4">View Orders</h2>
+            <div id="orders-list"></div>
+        </div>
+
+        <div id="users" class="section hidden">
+  <h2 class="text-2xl font-semibold mb-4">Manage Users</h2>
+  <div id="users-list"></div>
+</div>
+
+
+        <!-- Updated Delivery Section in the main-content div -->
+<div id="delivery" class="section hidden">
+    <h2 class="text-xl font-semibold mb-4">Add Delivery Personnel</h2>
+    <form id="delivery-personnel-form" class="mb-6" autocomplete="off">
+        <input type="email" id="personnel-email" placeholder="Personnel Email" class="input" required autocomplete="off">
+        <input type="text" id="personnel-hostels" placeholder="Hostels (comma-separated)" class="input" autocomplete="off">
+        <button type="submit" class="btn w-full"><i class="fas fa-plus mr-2"></i>Add Personnel</button>
+    </form>
+    <h2 class="text-xl font-semibold mb-4">Delivery Personnel</h2>
+    <div id="personnel-list" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;min-height:60px;">
+        <div style="text-align:center; color:#aaa; padding:20px 0;">Loading delivery personnel...</div>
+    </div>
+</div>
+
+<!-- Personnel Details Section -->
+<div id="personnel-details-section" class="section hidden">
+    <button id="back-to-personnel-list" class="btn btn-tertiary mb-4" style="max-width:180px;">
+        <i class="fas fa-arrow-left"></i>&nbsp;Back
+    </button>
+    <h2 class="text-xl font-semibold mb-4">Personnel Details</h2>
+    <div id="personnel-details-content"></div>
+</div>
+
+        <div id="settings" class="section hidden">
+            <h2 class="text-2xl font-semibold mb-4">Settings</h2>
+            <p>Manage your admin settings below.</p>
+            <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
+                <button id="logout-btn" class="btn btn-primary">Logout</button>
+                <button id="update-btn" class="btn">Force Update</button>
+            </div>
+            
+        </div>
+
+        <!-- ✅ APP SECTION (Add this inside your <body> tag) -->
+<div id="app" class="section hidden">
+  <h2 class="text-2xl font-semibold mb-4">App Settings</h2>
+  <p class="text-white mb-3">Toggle trending status and reorder</p>
+  
+  <div id="trending-toggle-list" class="mb-4"></div> <!-- ⬅️ NEW toggle list -->
+
+  <p class="text-white mb-2">Set custom trending order below</p>
+<div id="trending-order-list" class="mb-3"></div>
+
+</div>
+
+<div id="fees" class="section hidden">
+  <h2 class="text-2xl font-semibold mb-4">Manage Delivery Fees</h2>
+  <div id="fees-list" class="space-y-4"></div>
+</div>
+
+<div id="discounts" class="section hidden">
+  <h2 class="text-2xl font-semibold mb-4">Manage Discount Codes</h2>
+  <form id="add-discount-form" class="space-y-3">
+    <input type="text" placeholder="Code (e.g. CHAWP10)" required id="discount-code" class="input">
+    <select id="discount-type" class="input">
+      <option value="percent">Percent (%)</option>
+      <option value="flat">Flat Amount (GH₵)</option>
+    </select>
+<select id="discount-applies-to" class="input" required>
+  <option value="subtotal">Subtotal (Food + Processing)</option>
+  <option value="delivery">Delivery Fee Only</option>
+</select>
+<input type="number" id="discount-value" placeholder="Discount Amount" class="input" required>
+    <input type="number" id="discount-max-uses" placeholder="Max Uses (optional)" class="input">
+    <input type="datetime-local" id="discount-expiry" class="input">
+<div style="display: flex; align-items: center; gap: 12px;">
+  <label for="discount-active" style="color: #e0e0e0; font-weight: 500;">Active</label>
+  <label class="toggle-switch">
+    <input type="checkbox" id="discount-active" checked>
+    <span class="slider"></span>
+  </label>
+</div>
+    <button class="btn btn-primary" type="submit">Add Discount Code</button>
+  </form>
+  <hr class="my-4">
+  <div id="discount-list" class="space-y-3"></div>
+</div>
+
+
+
+    <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+import {
+  getFirestore, doc, setDoc, getDoc, collection, addDoc, getDocs,
+  deleteDoc, updateDoc, query, onSnapshot, where, orderBy
+} from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+
+import { 
+    getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence 
+} from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
+
+const appBtn = document.getElementById("app-btn");
+appBtn.addEventListener("click", () => {
+  toggleSection("app");
+  loadTrendingToggles();
+  loadTrendingList();
+});
+
+const firebaseConfig = {
+    apiKey: "AIzaSyADvpUQWo75ExePGoCRirD2mM-lmfM4Cmc",
+    authDomain: "von600-7982d.firebaseapp.com",
+    projectId: "von600-7982d",
+    storageBucket: "von600-7982d.appspot.com",
+    messagingSenderId: "164591218045",
+    appId: "1:164591218045:web:afe17512e16573e7903014",
+    measurementId: "G-E69DMPLXBK"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+const adminEmails = ["admin@gmail.com"];
+let latestVendorMap = {};
+let latestVendorNames = {};
+
+
+setPersistence(auth, browserLocalPersistence).catch(error => console.error("Persistence error:", error));
+
+// DOM Elements
+const passwordToggle = document.getElementById('password-toggle');
+const passwordInput = document.getElementById('password');
+const loadingScreen = document.getElementById("loading-screen");
+const loginSection = document.getElementById("login-section");
+const mainContent = document.getElementById("main-content");
+const notification = document.getElementById("notification");
+const loginNotification = document.getElementById("login-notification");
+const loginForm = document.getElementById("login-form");
+const loginBtn = document.getElementById("login-btn");
+const loginSpinner = document.getElementById("login-spinner");
+const dashboardGrid = document.getElementById("dashboard-grid");
+const restaurantList = document.getElementById("restaurant-list");
+const menuItemList = document.getElementById("menu-item-list");
+const vendorMappingList = document.getElementById("vendor-mapping-list");
+const ordersList = document.getElementById("orders-list");
+const usersList = document.getElementById("users-list");
+const sidebar = document.getElementById("sidebar");
+const sidebarToggle = document.getElementById("sidebar-toggle");
+const overlay = document.getElementById("overlay");
+const deliveryPersonnelForm = document.getElementById("delivery-personnel-form");
+const exportToggle = document.getElementById("export-toggle");
+const exportMenu = document.getElementById("export-menu");
+
+exportToggle.addEventListener("click", () => {
+    exportMenu.classList.toggle("hidden");
+});
+
+// Close dropdown if clicking outside
+document.addEventListener("click", (e) => {
+    if (!exportToggle.contains(e.target) && !exportMenu.contains(e.target)) {
+        exportMenu.classList.add("hidden");
+    }
+});
+
+
+// Password Toggle
+if (passwordToggle && passwordInput) {
+    passwordToggle.addEventListener('click', function() {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        this.querySelector('i').classList.toggle('fa-eye');
+        this.querySelector('i').classList.toggle('fa-eye-slash');
+    });
+}
+
+// Timeout to force hide loading screen after 5 seconds
+let timeoutTriggered = false;
+const loadingTimeout = setTimeout(() => {
+    if (loadingScreen && loadingScreen.style.display !== "none") {
+        console.warn("Loading screen timeout: Forcing login section display");
+        loadingScreen.style.display = "none";
+        loginSection.style.display = "flex";
+        mainContent.classList.add("hidden");
+        showLoginNotification("Loading took too long. Please try logging in.", "error");
+        timeoutTriggered = true;
+    }
+}, 5000);
+
+// Sidebar Functions
+function toggleSidebar() {
+    sidebar.classList.toggle("open");
+    overlay.classList.toggle("active");
+}
+
+function closeSidebar() {
+    sidebar.classList.remove("open");
+    overlay.classList.remove("active");
+}
+
+sidebarToggle.addEventListener("click", toggleSidebar);
+overlay.addEventListener("click", closeSidebar);
+
+// Notification Functions
+function formatErrorMessage(errorMsg) {
+    if (errorMsg.includes('auth/invalid-email')) {
+        return 'Please enter a valid email address.';
+    } else if (errorMsg.includes('auth/user-not-found')) {
+        return 'No account found with this email. Please check and try again.';
+    } else if (errorMsg.includes('auth/wrong-password')) {
+        return 'Incorrect password. Please try again.';
+    } else if (errorMsg.includes('auth/too-many-requests')) {
+        return 'Too many login attempts. Please try again later.';
+    } else if (errorMsg.includes('auth/network-request-failed')) {
+        return 'Network error. Please check your connection and try again.';
+    } else if (errorMsg.includes('auth/email-already-in-use')) {
+        return 'This email is already registered.';
+    } else if (errorMsg.includes('auth/weak-password')) {
+        return 'Password is too weak. Please use a stronger password.';
+    } else if (errorMsg.includes('auth/operation-not-allowed')) {
+        return 'This operation is not allowed. Please contact support.';
+    } else if (errorMsg.includes('permission-denied') || errorMsg.includes('insufficient permissions')) {
+        return 'Permission denied. Please ensure you have admin access or contact support.';
+    } else if (errorMsg.includes('auth/')) {
+        return 'Wrong email or password. Please try again.';
+    } else {
+        return errorMsg;
+    }
+}
+
+function showNotification(message, type = "success", target = notification) {
+    let displayMessage = type === "error" ? formatErrorMessage(message) : message;
+    target.innerHTML = `<i class="fas fa-${type === "error" ? "exclamation-circle" : "check-circle"} notification-icon"></i><span>${displayMessage}</span>`;
+    target.className = `notification ${type === "error" ? "error" : ""} show`;
+    setTimeout(() => target.classList.remove("show"), 5000);
+}
+
+function showLoginNotification(message, type = "success") {
+    showNotification(message, type, loginNotification);
+}
+
+// Section Toggle
+function toggleSection(sectionId) {
+const sections = ["dashboard", "restaurants", "vendor-mappings", "orders", "users", "delivery", "settings", "earnings", "edit-restaurant", "edit-menu", "app", "fees", "discounts"];
+    sections.forEach(id => {
+        const section = document.getElementById(id);
+        if (section) {
+            section.classList.toggle("hidden", id !== sectionId);
+        }
+        const btn = document.getElementById(`${id}-btn`);
+        if (btn) {
+            btn.classList.toggle("active", id === sectionId);
+        }
+    });
+    closeSidebar();
+}
+
+const loadDiscounts = async () => {
+  const container = document.getElementById("discount-list");
+  container.innerHTML = "Loading...";
+
+  const snapshot = await getDocs(collection(db, "discountCodes"));
+  container.innerHTML = "";
+
+  snapshot.forEach(doc => {
+    const data = doc.data();
+    const id = doc.id;
+
+    const div = document.createElement("div");
+    div.className = "item";
+    div.innerHTML = `
+      <h4>${data.code}</h4>
+<p>
+  ${data.type === "percent" ? data.value + "% off" : "GH₵" + data.value + " off"} 
+  ${data.appliesTo === "delivery" ? "Delivery fee" : "Subtotal"}
+</p>
+      <p>Status: ${data.active ? "✅ Active" : "❌ Inactive"}</p>
+      <p>Uses: ${data.uses ?? 0} / ${data.maxUses ?? "∞"}</p>
+      ${data.expiresAt ? `<p>Expires: ${new Date(data.expiresAt).toLocaleString()}</p>` : ""}
+      <div class="item-actions">
+        <button class="btn btn-secondary edit-code">Edit</button>
+        <button class="btn btn-tertiary toggle-code">${data.active ? "Deactivate" : "Activate"}</button>
+        <button class="btn btn-primary delete-code">Delete</button>
+      </div>
+    `;
+
+    // DELETE
+    div.querySelector(".delete-code").addEventListener("click", async () => {
+      if (confirm(`Delete discount code ${data.code}?`)) {
+        await deleteDoc(doc.ref);
+        showNotification("Discount code deleted");
+        loadDiscounts();
+      }
+    });
+
+    // TOGGLE ACTIVE
+    div.querySelector(".toggle-code").addEventListener("click", async () => {
+      await updateDoc(doc.ref, { active: !data.active });
+      showNotification(`Code ${data.code} is now ${!data.active ? "inactive" : "active"}`);
+      loadDiscounts();
+    });
+
+    // EDIT
+    div.querySelector(".edit-code").addEventListener("click", () => {
+      document.getElementById("discount-code").value = data.code;
+      document.getElementById("discount-type").value = data.type;
+      document.getElementById("discount-value").value = data.value;
+      document.getElementById("discount-max-uses").value = data.maxUses ?? "";
+      document.getElementById("discount-expiry").value = data.expiresAt ? new Date(data.expiresAt).toISOString().slice(0, 16) : "";
+      document.getElementById("discount-active").checked = data.active;
+    });
+
+    container.appendChild(div);
+  });
+};
+
+
+async function loadTrendingToggles() {
+  const container = document.getElementById("trending-toggle-list");
+  container.innerHTML = "Loading...";
+  const snapshot = await getDocs(collection(db, "restaurant"));
+
+  container.innerHTML = "";
+  snapshot.forEach(docSnap => {
+    const data = docSnap.data();
+    const id = docSnap.id;
+
+    const div = document.createElement("div");
+    div.className = "user-item";
+    div.innerHTML = `
+      <div class="user-details">
+        <h4>${data.name || "Unnamed"}</h4>
+        <p>ID: ${id}</p>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" ${data.isTrending ? "checked" : ""}>
+        <span class="slider"></span>
+      </label>
+    `;
+
+    const checkbox = div.querySelector("input");
+    checkbox.addEventListener("change", async () => {
+      await updateDoc(doc(db, "restaurant", id), {
+        isTrending: checkbox.checked
+      });
+      showNotification(`${data.name} is now ${checkbox.checked ? "trending" : "not trending"}`);
+      loadTrendingList(); // reload the list
+    });
+
+    container.appendChild(div);
+  });
+}
+
+// Load on section open
+appBtn.addEventListener("click", loadTrendingList);
+async function loadTrendingList() {
+  const container = document.getElementById("trending-order-list");
+  container.innerHTML = "Loading...";
+
+  const q = query(collection(db, "restaurant"));
+  const snapshot = await getDocs(q);
+
+  if (snapshot.empty) {
+    container.innerHTML = "<p>No trending restaurants found.</p>";
+    return;
+  }
+
+  container.innerHTML = "";
+  snapshot.forEach(docSnap => {
+    const data = docSnap.data();
+    const id = docSnap.id;
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "user-item";
+    wrapper.innerHTML = `
+      <div class="user-details">
+        <h4>${data.name || "Unnamed"}</h4>
+        <p>ID: ${id}</p>
+        <p>Trending Order: <strong>${data.trendingOrder ?? "Not set"}</strong></p>
+      </div>
+      <div class="user-actions">
+        <button class="btn btn-secondary edit-btn">Edit</button>
+      </div>
+    `;
+
+    const editBtn = wrapper.querySelector(".edit-btn");
+
+    editBtn.addEventListener("click", () => {
+      const actionsDiv = wrapper.querySelector(".user-actions");
+      actionsDiv.innerHTML = `
+        <input type="number" min="0" value="${data.trendingOrder ?? ""}" placeholder="Order #" class="input" style="width: 70px;" />
+        <button class="btn btn-primary save-btn">Save</button>
+      `;
+
+      const saveBtn = actionsDiv.querySelector(".save-btn");
+      const input = actionsDiv.querySelector("input");
+
+      saveBtn.addEventListener("click", async () => {
+        const order = parseInt(input.value.trim());
+        if (isNaN(order)) {
+          showNotification("Please enter a valid order number", "error");
+          return;
+        }
+
+        try {
+          await updateDoc(doc(db, "restaurant", id), {
+            trendingOrder: order
+          });
+          showNotification(`Trending order saved for ${data.name} ✅`);
+          loadTrendingList(); // refresh
+        } catch (err) {
+          console.error(err);
+          showNotification("Failed to update order", "error");
+        }
+      });
+    });
+
+    container.appendChild(wrapper);
+  });
+}
+
+
+// Restaurant Functions
+async function loadRestaurantsForDropdown() {
+    try {
+        const vendorSnapshot = await getDocs(collection(db, "vendorMappings"));
+        const mappedRestaurantIds = vendorSnapshot.docs.map(doc => doc.data().restaurantId);
+        
+        const restaurantSnapshot = await getDocs(collection(db, "restaurant"));
+        const dropdown = document.getElementById("vendor-restaurant");
+        dropdown.innerHTML = '<option value="" disabled selected>Select Restaurant</option>';
+        
+        restaurantSnapshot.forEach(doc => {
+            if (!mappedRestaurantIds.includes(doc.id)) {
+                const option = document.createElement("option");
+                option.value = doc.id;
+                option.textContent = doc.data().name || "Unnamed";
+                dropdown.appendChild(option);
+            }
+        });
+        
+        if (dropdown.options.length === 1) {
+            dropdown.innerHTML += '<option value="" disabled>No unmapped restaurants</option>';
+        }
+    } catch (error) {
+        console.error("Error loading restaurants for dropdown:", error);
+        showNotification("Failed to load restaurants for mapping", "error");
+    }
+}
+
+function loadEarnings() {
+    const totalRevenueEl = document.getElementById("total-revenue");
+    const pendingPayoutsEl = document.getElementById("pending-payouts");
+    const vendorEarningsList = document.getElementById("vendor-earnings-list");
+    const filter = document.getElementById("earnings-filter").value;
+
+    const now = new Date();
+    let startDate = new Date(0); // default: all time
+
+    if (filter === "today") {
+        startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    } else if (filter === "7days") {
+        startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    } else if (filter === "month") {
+        startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+    }
+
+    let totalRevenue = 0;
+let pendingPayouts = 0;
+let vendorMap = {};
+
+onSnapshot(collection(db, "orders"), (snapshot) => {
+    totalRevenue = 0;
+    pendingPayouts = 0;
+    vendorMap = {}; // now allowed since it's declared as let
+
+        snapshot.forEach(doc => {
+            const order = doc.data();
+            if (!order.timestamp || !order.totalAmount || !order.restaurantId) return;
+
+            const orderDate = new Date(order.timestamp);
+            if (orderDate < startDate) return;
+
+            const amount = Number(order.totalAmount);
+            totalRevenue += amount;
+
+            if (!order.status || order.status.toLowerCase() !== "completed") {
+                pendingPayouts += amount;
+            }
+
+            if (!vendorMap[order.restaurantId]) {
+                vendorMap[order.restaurantId] = { total: 0, pending: 0, count: 0 };
+            }
+            vendorMap[order.restaurantId].total += amount;
+            vendorMap[order.restaurantId].count += 1;
+            if (!order.status || order.status.toLowerCase() !== "completed") {
+                vendorMap[order.restaurantId].pending += amount;
+            }
+        });
+
+        totalRevenueEl.textContent = `GH₵${totalRevenue.toFixed(2)}`;
+        pendingPayoutsEl.textContent = `GH₵${pendingPayouts.toFixed(2)}`;
+
+        renderVendorBreakdown(vendorMap);
+
+        let deliveryMap = {};
+
+snapshot.forEach(doc => {
+    const order = doc.data();
+    if (!order.timestamp || !order.deliveryPersonId || !order.status) return;
+
+    const orderDate = new Date(order.timestamp);
+    if (orderDate < startDate) return;
+
+    const status = order.status.toLowerCase();
+    if (status !== "delivered" && status !== "completed") return;
+
+    const deliveryId = order.deliveryPersonId;
+
+    if (!deliveryMap[deliveryId]) {
+        deliveryMap[deliveryId] = { total: 0, pending: 0, count: 0 };
+    }
+
+    deliveryMap[deliveryId].count += 1;
+    deliveryMap[deliveryId].total += 5; // GH₵5 per delivery
+
+    if (status !== "completed") {
+        deliveryMap[deliveryId].pending += 5;
+    }
+});
+
+renderDeliveryBreakdown(deliveryMap);
+
+
+    });
+}
+
+async function renderDeliveryBreakdown(deliveryMap) {
+    const deliveryList = document.getElementById("delivery-earnings-list");
+    deliveryList.innerHTML = "<p>Loading...</p>";
+
+    const userSnapshot = await getDocs(collection(db, "users"));
+    const nameMap = {};
+    userSnapshot.forEach(doc => {
+        const data = doc.data();
+        nameMap[doc.id] = data.name || data.email || doc.id;
+    });
+
+    const html = Object.entries(deliveryMap).map(([id, data]) => `
+        <div class="item">
+            <h4>${nameMap[id] || id}</h4>
+            <p><b>Deliveries:</b> ${data.count}</p>
+            <p><b>Earnings:</b> GH₵${data.total.toFixed(2)}</p>
+            <p><b>Pending:</b> GH₵${data.pending.toFixed(2)}</p>
+        </div>
+    `).join("");
+
+    deliveryList.innerHTML = html || "<p>No delivery data available.</p>";
+}
+
+
+
+
+
+async function renderVendorBreakdown(vendorMap) {
+    const vendorList = document.getElementById("vendor-earnings-list");
+    vendorList.innerHTML = "<p>Loading...</p>";
+
+    const snapshot = await getDocs(collection(db, "restaurant"));
+    const nameMap = {};
+    snapshot.forEach(doc => nameMap[doc.id] = doc.data().name || "Unnamed");
+
+    // 🔥 Save globally for CSV export
+    latestVendorMap = vendorMap;
+    latestVendorNames = nameMap;
+
+    const fragments = Object.entries(vendorMap).map(([vendorId, data]) => {
+        return `
+            <div class="item">
+                <h4>${nameMap[vendorId] || vendorId}</h4>
+                <p><b>Orders:</b> ${data.count}</p>
+                <p><b>Revenue:</b> GH₵${data.total.toFixed(2)}</p>
+                <p><b>Pending:</b> GH₵${data.pending.toFixed(2)}</p>
+            </div>
+        `;
+    });
+
+    async function renderDeliveryBreakdown(deliveryMap) {
+    const deliveryList = document.getElementById("delivery-earnings-list");
+    deliveryList.innerHTML = "<p>Loading...</p>";
+
+    // You’ll need a way to map delivery personnel ID to names if available
+    const userSnapshot = await getDocs(collection(db, "users"));
+    const nameMap = {};
+    userSnapshot.forEach(doc => nameMap[doc.id] = doc.data().name || doc.data().email || "Unnamed");
+
+    const fragments = Object.entries(deliveryMap).map(([personnelId, data]) => {
+        return `
+            <div class="item">
+                <h4>${nameMap[personnelId] || personnelId}</h4>
+                <p><b>Orders:</b> ${data.count}</p>
+                <p><b>Revenue:</b> GH₵${data.total.toFixed(2)}</p>
+                <p><b>Pending:</b> GH₵${data.pending.toFixed(2)}</p>
+            </div>
+        `;
+    });
+
+    deliveryList.innerHTML = fragments.length ? fragments.join("") : "<p>No data available.</p>";
+}
+
+
+    document.getElementById("export-pdf-btn").addEventListener("click", () => {
+    const earningsEl = document.getElementById("earnings");
+
+    const opt = {
+        margin: 0.5,
+        filename: `vendor_earnings_${new Date().toISOString().split("T")[0]}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+
+    html2pdf().from(earningsEl).set(opt).save();
+});
+
+document.getElementById("export-excel-btn").addEventListener("click", () => {
+    if (Object.keys(latestVendorMap).length === 0) {
+        showNotification("No data to export.", "error");
+        return;
+    }
+
+    const ws_data = [["Vendor Name", "Vendor ID", "Orders", "Revenue", "Pending"]];
+    Object.entries(latestVendorMap).forEach(([vendorId, data]) => {
+        ws_data.push([
+            latestVendorNames[vendorId] || vendorId,
+            vendorId,
+            data.count,
+            data.total.toFixed(2),
+            data.pending.toFixed(2)
+        ]);
+    });
+
+    const worksheet = XLSX.utils.aoa_to_sheet(ws_data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Earnings");
+
+    XLSX.writeFile(workbook, `vendor_earnings_${new Date().toISOString().split("T")[0]}.xlsx`);
+});
+
+
+    document.getElementById("export-csv-btn").addEventListener("click", () => {
+    if (Object.keys(latestVendorMap).length === 0) {
+        showNotification("No data available to export.", "error");
+        return;
+    }
+    exportVendorEarningsCSV(latestVendorMap, latestVendorNames);
+});
+
+
+    vendorList.innerHTML = fragments.length ? fragments.join("") : "<p>No data available.</p>";
+}
+
+function exportVendorEarningsCSV(vendorMap, nameMap) {
+    const headers = ["Vendor Name", "Vendor ID", "Orders", "Revenue (GH₵)", "Pending (GH₵)"];
+    const rows = [headers];
+
+    Object.entries(vendorMap).forEach(([vendorId, data]) => {
+        const row = [
+            nameMap[vendorId] || vendorId,
+            vendorId,
+            data.count,
+            data.total.toFixed(2),
+            data.pending.toFixed(2)
+        ];
+        rows.push(row);
+    });
+
+    const csvContent = rows.map(e => e.join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+    link.setAttribute("href", URL.createObjectURL(blob));
+    link.setAttribute("download", `vendor_earnings_${timestamp}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+
+async function loadRestaurants() {
+    try {
+        const querySnapshot = await getDocs(collection(db, "restaurant"));
+        const fragment = document.createDocumentFragment();
+        querySnapshot.forEach(doc => {
+            const data = doc.data();
+            const item = document.createElement("div");
+            item.className = "item";
+            item.innerHTML = `
+                <h4>${data.name || "Unnamed"}</h4>
+                <p>ID: ${doc.id}</p>
+                <p>Image: ${data.image || "None"}</p>
+                <p>Delivery Time: ${data.delivery_time || "Not set"} minutes</p>
+                <p>Status: ${data.isOpen ? "Open" : "Closed"}</p>
+                <div class="item-actions">
+                    <button class="btn btn-secondary edit-restaurant" data-id="${doc.id}">Edit</button>
+                    <button class="btn btn-secondary delete-restaurant" data-id="${doc.id}">Delete</button>
+                </div>
+            `;
+            item.querySelector(".edit-restaurant").addEventListener("click", () => editRestaurant(doc.id));
+            item.querySelector(".delete-restaurant").addEventListener("click", () => {
+                if (confirm(`Are you sure you want to delete restaurant ID: ${doc.id}?`)) deleteRestaurant(doc.id);
+            });
+            fragment.appendChild(item);
+        });
+        restaurantList.innerHTML = "";
+        restaurantList.appendChild(fragment);
+        if (!querySnapshot.size) restaurantList.innerHTML = "<p class='text-gray-400'>No restaurants found.</p>";
+    } catch (error) {
+        console.error("Error loading restaurants:", error);
+        showNotification("Failed to load restaurants", "error");
+    }
+}
+
+async function editRestaurant(id) {
+    try {
+        const restaurantDoc = await getDoc(doc(db, "restaurant", id));
+        if (restaurantDoc.exists()) {
+            const data = restaurantDoc.data();
+            document.getElementById("edit-restaurant-id").value = id;
+            document.getElementById("edit-restaurant-name").value = data.name || "";
+            document.getElementById("edit-restaurant-image").value = data.image || "";
+            document.getElementById("edit-delivery-time").value = data.delivery_time || "";
+            const statusCheckbox = document.getElementById("edit-restaurant-status");
+            statusCheckbox.checked = data.isOpen;
+            document.getElementById("status-text").textContent = data.isOpen ? "Open" : "Closed";
+            toggleSection("edit-restaurant");
+        }
+    } catch (error) {
+        console.error("Error loading restaurant for edit:", error);
+        showNotification("Failed to load restaurant details", "error");
+    }
+}
+
+document.getElementById("edit-restaurant-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    try {
+        const id = document.getElementById("edit-restaurant-id").value;
+        const name = document.getElementById("edit-restaurant-name").value;
+        const image = document.getElementById("edit-restaurant-image").value;
+        const delivery_time = document.getElementById("edit-delivery-time").value;
+        const isOpen = document.getElementById("edit-restaurant-status").checked;
+
+        if (!name.trim()) {
+            showNotification("Please enter a restaurant name.", "error");
+            return;
+        }
+
+        if (delivery_time && (isNaN(delivery_time) || delivery_time < 0)) {
+            showNotification("Please enter a valid delivery time.", "error");
+            return;
+        }
+
+        await updateDoc(doc(db, "restaurant", id), {
+            name,
+            image,
+            delivery_time: delivery_time ? Number(delivery_time) : null,
+            isOpen,
+            timestamp: Date.now()
+        });
+
+        showNotification(`Restaurant "${name}" updated successfully!`);
+        toggleSection("restaurants");
+        loadRestaurants();
+    } catch (error) {
+        console.error("Error updating restaurant:", error);
+        showNotification("Unable to update restaurant. Please try again.", "error");
+    }
+});
+
+document.getElementById("edit-menu-btn").addEventListener("click", () => {
+    const restaurantId = document.getElementById("edit-restaurant-id").value;
+    document.getElementById("current-restaurant-id").value = restaurantId;
+    loadMenuItems(restaurantId);
+    toggleSection("edit-menu");
+});
+
+document.getElementById("back-to-edit-restaurant").addEventListener("click", () => {
+    const restaurantId = document.getElementById("current-restaurant-id").value;
+    editRestaurant(restaurantId);
+});
+
+document.getElementById("cancel-edit").addEventListener("click", () => {
+    toggleSection("restaurants");
+});
+
+document.getElementById("edit-restaurant-status").addEventListener("change", (e) => {
+    document.getElementById("status-text").textContent = e.target.checked ? "Open" : "Closed";
+});
+
+// Vendor Mapping Functions
+async function loadVendorMappings() {
+    try {
+        const querySnapshot = await getDocs(collection(db, "vendorMappings"));
+        const fragment = document.createDocumentFragment();
+        querySnapshot.forEach(doc => {
+            const data = doc.data();
+            const item = document.createElement("div");
+            item.className = "item";
+            item.innerHTML = `
+                <h4>${doc.id}</h4>
+                <p>Restaurant ID: ${data.restaurantId}</p>
+                <button class="btn btn-secondary delete-mapping" data-id="${doc.id}">Delete</button>
+            `;
+            item.querySelector(".delete-mapping").addEventListener("click", () => {
+                if (confirm(`Are you sure you want to delete vendor mapping for email: ${doc.id}?`)) deleteVendorMapping(doc.id);
+            });
+            fragment.appendChild(item);
+        });
+        vendorMappingList.innerHTML = "";
+        vendorMappingList.appendChild(fragment);
+        if (!querySnapshot.size) vendorMappingList.innerHTML = "<p class='text-gray-400'>No mappings found.</p>";
+        loadRestaurantsForDropdown();
+    } catch (error) {
+        console.error("Error loading vendor mappings:", error);
+        showNotification("Failed to load vendor mappings", "error");
+    }
+}
+
+// Menu Item Functions
+async function loadMenuItems(restaurantId) {
+    try {
+        const querySnapshot = await getDocs(collection(db, "restaurant", restaurantId, "menu"));
+        const fragment = document.createDocumentFragment();
+        querySnapshot.forEach(doc => {
+            const data = doc.data();
+            const item = document.createElement("div");
+            item.className = "item";
+            item.innerHTML = `
+                <h4>${data.name || "Unnamed"}</h4>
+                <p>Price: GH₵${data.price?.toFixed(2) || "Not set"}</p>
+                <div class="item-actions">
+                    <button class="btn btn-secondary edit-menu-item" data-id="${doc.id}" data-restaurant-id="${restaurantId}">Edit</button>
+                    <button class="btn btn-secondary delete-menu-item" data-id="${doc.id}" data-restaurant-id="${restaurantId}">Delete</button>
+                </div>
+            `;
+            item.querySelector(".edit-menu-item").addEventListener("click", () => editMenuItem(restaurantId, doc.id));
+            item.querySelector(".delete-menu-item").addEventListener("click", () => {
+                if (confirm(`Are you sure you want to delete menu item: ${data.name}?`)) deleteMenuItem(restaurantId, doc.id);
+            });
+            fragment.appendChild(item);
+        });
+        menuItemList.innerHTML = "";
+        menuItemList.appendChild(fragment);
+        if (!querySnapshot.size) menuItemList.innerHTML = "<p class='text-gray-400'>No menu items found.</p>";
+    } catch (error) {
+        console.error("Error loading menu items:", error);
+        showNotification("Failed to load menu items", "error");
+    }
+}
+
+async function editMenuItem(restaurantId, itemId) {
+    try {
+        const itemDoc = await getDoc(doc(db, "restaurant", restaurantId, "menu", itemId));
+        if (itemDoc.exists()) {
+            const data = itemDoc.data();
+            const nameInput = document.getElementById("menu-item-name");
+            const priceInput = document.getElementById("menu-item-price");
+            
+            nameInput.value = data.name || "";
+            priceInput.value = data.price || "";
+            
+            const form = document.getElementById("menu-item-form");
+            form.dataset.itemId = itemId;
+            form.querySelector("button").textContent = "Update Menu Item";
+        }
+    } catch (error) {
+        console.error("Error loading menu item for edit:", error);
+        showNotification("Failed to load menu item details", "error");
+    }
+}
+
+async function deleteMenuItem(restaurantId, itemId) {
+    try {
+        await deleteDoc(doc(db, "restaurant", restaurantId, "menu", itemId));
+        showNotification("Menu item successfully deleted!");
+        loadMenuItems(restaurantId);
+    } catch (error) {
+        console.error("Error deleting menu item:", error);
+        showNotification("Unable to delete menu item. Please try again.", "error");
+    }
+}
+
+document.getElementById("menu-item-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    try {
+        const restaurantId = document.getElementById("current-restaurant-id").value;
+        const name = document.getElementById("menu-item-name").value;
+        const price = document.getElementById("menu-item-price").value;
+        const form = document.getElementById("menu-item-form");
+        const itemId = form.dataset.itemId;
+
+        if (!name.trim()) {
+            showNotification("Please enter a menu item name.", "error");
+            return;
+        }
+
+        if (!price || isNaN(price) || price < 0) {
+            showNotification("Please enter a valid price.", "error");
+            return;
+        }
+
+        const itemData = {
+            name,
+            price: Number(price),
+            timestamp: Date.now()
+        };
+
+        if (itemId) {
+            await updateDoc(doc(db, "restaurant", restaurantId, "menu", itemId), itemData);
+            showNotification(`Menu item "${name}" updated successfully!`);
+            delete form.dataset.itemId;
+            form.querySelector("button").textContent = "Add Menu Item";
+        } else {
+            await addDoc(collection(db, "restaurant", restaurantId, "menu"), itemData);
+            showNotification(`Menu item "${name}" added successfully!`);
+        }
+
+        document.getElementById("menu-item-name").value = "";
+        document.getElementById("menu-item-price").value = "";
+        loadMenuItems(restaurantId);
+    } catch (error) {
+        console.error("Error saving menu item:", error);
+        showNotification("Unable to save menu item. Please try again.", "error");
+    }
+});
+
+// Dashboard Functions
+function loadDashboard() {
+    try {
+        const now = Date.now();
+        const day = 24 * 60 * 60 * 1000;
+
+        const currentDate = new Date();
+        document.getElementById("current-date").textContent = currentDate.toLocaleDateString('en-US', {
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric'
+        });
+
+      
+        let restaurantCount = 0, vendorCount = 0, orderCount = 0, userCount = 0;
+
+        onSnapshot(collection(db, "restaurant"), (snapshot) => {
+            restaurantCount = snapshot.size;
+            updateDashboard();
+        }, error => console.error("Restaurant snapshot error:", error));
+
+        onSnapshot(collection(db, "vendorMappings"), (snapshot) => {
+            vendorCount = snapshot.size;
+            updateDashboard();
+        }, error => console.error("Vendor snapshot error:", error));
+
+        onSnapshot(collection(db, "orders"), (snapshot) => {
+            orderCount = snapshot.size;
+            updateDashboard();
+        }, error => console.error("Orders snapshot error:", error));
+
+        onSnapshot(collection(db, "users"), (snapshot) => {
+            userCount = snapshot.size;
+            updateDashboard();
+        }, error => console.error("Users snapshot error:", error));
+
+        function updateDashboard() {
+            dashboardGrid.innerHTML = "";
+            const cards = [
+                  { id: "users", title: "Users", count: userCount, icon: "fa-users", tooltip: "Total users" },
+                   { id: "orders", title: "Orders", count: orderCount, icon: "fa-shopping-cart", tooltip: "Total orders" },
+                { id: "restaurants", title: "Restaurants", count: restaurantCount, icon: "fa-store", tooltip: "Total restaurants" },
+                { id: "vendors", title: "Vendors", count: vendorCount, icon: "fa-user-tie", tooltip: "Total vendors" }
+            ];
+            
+            cards.forEach(card => {
+                const div = document.createElement("div");
+                div.className = `dashboard-card ${card.id}`;
+                div.innerHTML = `
+                    <div class="tooltip">${card.tooltip}</div>
+                    <h3>${card.title}</h3>
+                    <div class="subtitle">Total Active</div>
+                    <p>${card.count}</p>
+                    <i class="fas ${card.icon}"></i>
+                `;
+                dashboardGrid.appendChild(div);
+            });
+        }
+    } catch (error) {
+        console.error("Error loading dashboard:", error);
+        showNotification("Unable to load dashboard. Please try again.", "error");
+    }
+}
+
+// Order Functions
+function loadOrders() {
+  try {
+    onSnapshot(query(collection(db, "orders"), orderBy("timestamp", "desc")), (snapshot) => {
+      if (snapshot.empty) {
+        ordersList.innerHTML = "<p style='color:#aaa;text-align:center;'>No orders yet.</p>";
+        return;
+      }
+
+      ordersList.innerHTML = "";
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        const orderId = doc.id;
+        const time = data.timestamp?.toDate().toLocaleString() || "Unknown";
+        const cart = data.cart || [];
+        const delivery = data.deliveryDetails || {};
+        const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const processingFee = data.processingFee ?? 2.00;
+        const deliveryFee = data.deliveryFee ?? 3.00;
+        const total = data.totalAmount ?? (subtotal + processingFee + deliveryFee);
+        const status = data.status || "pending";
+
+        const statusColors = {
+          "pending": "bg-yellow-500 text-black",
+          "being_delivered": "bg-blue-500 text-white",
+          "delivered": "bg-green-500 text-white",
+          "not_delivered": "bg-red-500 text-white"
+        };
+        const statusText = {
+          "pending": "Pending",
+          "being_delivered": "In Transit",
+          "delivered": "Delivered",
+          "not_delivered": "Failed"
+        };
+
+        const itemDiv = document.createElement("div");
+        itemDiv.className = "rounded-xl p-4 mb-4 shadow-md cursor-pointer transition-all duration-200";
+        itemDiv.style.background = "#2b2b2d";
+
+        const statusBadge = `<span class="px-3 py-1 rounded-full text-xs font-semibold ${statusColors[status] || "bg-gray-600 text-white"}">
+          ${statusText[status] || status}
+        </span>`;
+
+        itemDiv.innerHTML = `
+          <div class="flex justify-between items-center flex-wrap mb-2 order-header">
+            <div>
+              <h4 class="text-white font-semibold text-lg mb-1">Order #${orderId}</h4>
+              <p class="text-sm text-gray-400">${time}</p>
+            </div>
+            <div class="mt-2 sm:mt-0">
+              ${statusBadge}
+            </div>
+          </div>
+          <div class="order-details mt-2 text-sm text-gray-300 hidden">
+            <p><strong>Location:</strong> ${delivery.hostel || "-"}, Room ${delivery.location || "-"}</p>
+            <p><strong>Contact:</strong> ${delivery.contactNumber || "-"}</p>
+            <p><strong>Note:</strong> ${delivery.note || "None"}</p>
+            <ul class="list-disc list-inside text-white text-sm my-2">
+              ${cart.map(item => `<li>${item.quantity}x ${item.name} - GH₵${(item.price * item.quantity).toFixed(2)}</li>`).join("")}
+            </ul>
+            <p><strong>Subtotal:</strong> GH₵${subtotal.toFixed(2)}</p>
+            <p><strong>Processing Fee:</strong> GH₵${processingFee.toFixed(2)}</p>
+            <p><strong>Delivery Fee:</strong> GH₵${deliveryFee.toFixed(2)}</p>
+            <p class="text-white font-bold mt-1"><strong>Total:</strong> GH₵${total.toFixed(2)}</p>
+            <button class="btn btn-secondary delete-order mt-3" data-id="${orderId}">Delete</button>
+          </div>
+        `;
+
+        // Toggle on click
+        itemDiv.addEventListener("click", (e) => {
+          if (e.target.classList.contains("delete-order")) return; // prevent toggle on delete
+          const details = itemDiv.querySelector(".order-details");
+          details.classList.toggle("hidden");
+        });
+
+        // Delete listener
+        itemDiv.querySelector(".delete-order").addEventListener("click", () => {
+          if (confirm(`Delete order ID: ${orderId}?`)) deleteOrder(orderId);
+        });
+
+        ordersList.appendChild(itemDiv);
+      });
+    }, err => {
+      console.error(err);
+      ordersList.innerHTML = "<p class='text-red-500'>Failed to load orders.</p>";
+    });
+  } catch (err) {
+    console.error(err);
+    showNotification("Error loading orders", "error");
+  }
+}
+
+// User Functions
+async function loadUsers() {
+    try {
+        const querySnapshot = await getDocs(collection(db, "users"));
+        const usersArray = [];
+
+        querySnapshot.forEach(doc => {
+            const data = doc.data();
+            usersArray.push({ id: doc.id, data });
+        });
+
+        // Sort by dateJoined or createdAt, newest first
+        usersArray.sort((a, b) => {
+            const dateA = a.data.dateJoined || a.data.createdAt;
+            const dateB = b.data.dateJoined || b.data.createdAt;
+            if (dateA && dateB) return new Date(dateB) - new Date(dateA);
+            if (dateA) return -1;
+            if (dateB) return 1;
+            return 0;
+        });
+
+        const fragment = document.createDocumentFragment();
+
+        usersArray.forEach(({ id, data }) => {
+            const item = document.createElement("div");
+            item.className = "user-item";
+
+            const createdAt = formatDate(data.dateJoined || data.createdAt);
+            const name = data.name || "";
+            const userId = data.userId || "N/A";
+            const phone = data.phone || "N/A";
+            const email = data.email || "N/A";
+
+            item.innerHTML = `
+                <div class="user-details">
+                    <h4 class="name-display">${name}</h4>
+                    <input type="text" class="edit-name input hidden" value="${name}" style="max-width: 100%;" />
+                    <p><strong>User ID:</strong> ${userId}</p>
+                    <p><strong>Phone:</strong> ${phone}</p>
+                    <p><strong>Email:</strong> ${email}</p>
+                    <p><strong>Created At:</strong> ${createdAt || 'N/A'}</p>
+                </div>
+                <div class="user-actions">
+                    <button class="btn btn-secondary edit-name-btn">Edit</button>
+                    <button class="btn btn-secondary save-name-btn hidden">Save</button>
+                    <button class="btn btn-tertiary cancel-edit-btn hidden">Cancel</button>
+                    <button class="btn btn-primary delete-user" data-id="${id}">Delete</button>
+                </div>
+            `;
+
+            const editBtn = item.querySelector(".edit-name-btn");
+            const saveBtn = item.querySelector(".save-name-btn");
+            const cancelBtn = item.querySelector(".cancel-edit-btn");
+            const nameInput = item.querySelector(".edit-name");
+            const nameDisplay = item.querySelector(".name-display");
+
+            editBtn.addEventListener("click", () => {
+                nameDisplay.classList.add("hidden");
+                nameInput.classList.remove("hidden");
+                saveBtn.classList.remove("hidden");
+                cancelBtn.classList.remove("hidden");
+                editBtn.classList.add("hidden");
+            });
+
+            cancelBtn.addEventListener("click", () => {
+                nameInput.value = nameDisplay.textContent;
+                nameDisplay.classList.remove("hidden");
+                nameInput.classList.add("hidden");
+                saveBtn.classList.add("hidden");
+                cancelBtn.classList.add("hidden");
+                editBtn.classList.remove("hidden");
+            });
+
+            saveBtn.addEventListener("click", async () => {
+                const newName = nameInput.value.trim();
+                if (!newName) {
+                    showNotification("Name cannot be empty", "error");
+                    return;
+                }
+                await updateDoc(doc(db, "users", id), { name: newName });
+                nameDisplay.textContent = newName;
+                nameDisplay.classList.remove("hidden");
+                nameInput.classList.add("hidden");
+                saveBtn.classList.add("hidden");
+                cancelBtn.classList.add("hidden");
+                editBtn.classList.remove("hidden");
+                showNotification("Name updated successfully");
+            });
+
+            item.querySelector(".delete-user").addEventListener("click", () => {
+                if (confirm(`Are you sure you want to delete user ID: ${id}?`)) {
+                    deleteUser(id);
+                }
+            });
+
+            fragment.appendChild(item);
+        });
+
+        usersList.innerHTML = "";
+        usersList.appendChild(fragment);
+
+        if (!usersArray.length) {
+            usersList.innerHTML = "<p class='text-gray-400'>No users found.</p>";
+        }
+
+    } catch (error) {
+        console.error("Error loading users:", error);
+        showNotification("Failed to load users", "error");
+    }
+}
+
+// Format date as "27 May, 2025"
+function formatDate(timestamp) {
+    if (!timestamp) return null;
+    const date = new Date(timestamp);
+
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = date.toLocaleString('en-US', { month: 'short' });
+    const year = date.getFullYear();
+
+    const time = date.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+    });
+
+    return `${day} ${month}, ${year} at ${time}`;
+}
+
+// Delete Functions
+async function deleteRestaurant(id) {
+    try {
+        await deleteDoc(doc(db, "restaurant", id));
+        showNotification("Restaurant successfully deleted!");
+        loadRestaurants();
+    } catch (error) {
+        console.error("Error deleting restaurant:", error);
+        showNotification("Unable to delete restaurant. Please try again.", "error");
+    }
+}
+
+async function deleteVendorMapping(id) {
+    try {
+        await deleteDoc(doc(db, "vendorMappings", id));
+        showNotification("Vendor mapping successfully deleted!");
+        loadVendorMappings();
+        loadRestaurantsForDropdown();
+    } catch (error) {
+        console.error("Error deleting vendor mapping:", error);
+        showNotification("Unable to delete vendor mapping. Please try again.", "error");
+    }
+}
+
+async function deleteOrder(id) {
+    try {
+        await deleteDoc(doc(db, "orders", id));
+        showNotification("Order successfully deleted!");
+    } catch (error) {
+        console.error("Error deleting order:", error);
+        showNotification("Unable to delete order. Please try again.", "error");
+    }
+}
+
+async function deleteUser(id) {
+    try {
+        await deleteDoc(doc(db, "users", id));
+        showNotification("User successfully deleted!");
+        loadUsers();
+    } catch (error) {
+        console.error("Error deleting user:", error);
+        showNotification("Unable to delete user. Please try again.", "error");
+    }
+}
+
+// Form Handlers
+document.getElementById("add-discount-form").addEventListener("submit", async e => {
+  e.preventDefault();
+
+  const code = document.getElementById("discount-code").value.trim().toUpperCase();
+  const type = document.getElementById("discount-type").value;
+  const value = parseFloat(document.getElementById("discount-value").value);
+  const maxUses = parseInt(document.getElementById("discount-max-uses").value) || null;
+  const expiresAtRaw = document.getElementById("discount-expiry").value;
+  const active = document.getElementById("discount-active").checked;
+  const expiresAt = expiresAtRaw ? new Date(expiresAtRaw).toISOString() : null;
+const appliesTo = document.getElementById("discount-applies-to").value;
+
+  if (!code || isNaN(value) || value <= 0) {
+    showNotification("Please enter a valid code and value", "error");
+    return;
+  }
+
+  try {
+   await setDoc(doc(db, "discountCodes", code), {
+  code,
+  type,
+  value,
+  active,
+  maxUses,
+  expiresAt,
+  appliesTo // ✅ NEW
+}, { merge: true });
+
+    showNotification("Discount code saved ✅");
+    e.target.reset();
+    loadDiscounts();
+  } catch (err) {
+    console.error(err);
+    showNotification("Failed to save discount code", "error");
+  }
+});
+
+
+document.getElementById("restaurant-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    try {
+        const name = document.getElementById("restaurant-name").value;
+        const image = document.getElementById("restaurant-image").value;
+        const delivery_time = document.getElementById("delivery_time").value;
+        
+        if (!name.trim()) {
+            showNotification("Please enter a restaurant name.", "error");
+            return;
+        }
+        
+        if (delivery_time && isNaN(delivery_time) || delivery_time < 0) {
+            showNotification("Please enter a valid delivery time.", "error");
+            return;
+        }
+
+        const docRef = await addDoc(collection(db, "restaurant"), { 
+            name, 
+            image, 
+            delivery_time: delivery_time ? Number(delivery_time) : null,
+            isOpen: false, 
+            timestamp: Date.now() 
+        });
+        showNotification(`Restaurant "${name}" has been added successfully!`);
+        document.getElementById("restaurant-name").value = "";
+        document.getElementById("restaurant-image").value = "";
+        document.getElementById("delivery_time").value = "";
+        loadRestaurants();
+    } catch (error) {
+        console.error("Error adding restaurant:", error);
+        showNotification("Unable to add restaurant. Please try again.", "error");
+    }
+});
+
+document.getElementById("vendor-mapping-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    try {
+        const email = document.getElementById("vendor-email").value.trim();
+        const restaurantId = document.getElementById("vendor-restaurant").value;
+        
+        if (!email) {
+            showNotification("Please enter a vendor email.", "error");
+            return;
+        }
+        
+        if (!restaurantId) {
+            showNotification("Please select a restaurant.", "error");
+            return;
+        }
+        
+        await setDoc(doc(db, "vendorMappings", email), { restaurantId, timestamp: Date.now() });
+        showNotification(`Vendor "${email}" has been mapped successfully!`);
+        document.getElementById("vendor-email").value = "";
+        document.getElementById("vendor-restaurant").value = "";
+        loadVendorMappings();
+        loadRestaurantsForDropdown();
+    } catch (error) {
+        console.error("Error adding vendor mapping:", error);
+        showNotification("Unable to add vendor mapping. Please try again.", "error");
+    }
+});
+
+// Delivery Section Functions (UI improved)
+async function loadDeliveryPersonnel() {
+    try {
+        const personnelList = document.getElementById("personnel-list");
+        personnelList.innerHTML = `<div style="text-align:center; color:#aaa; padding:20px 0;">Loading delivery personnel...</div>`;
+        onSnapshot(collection(db, "deliveryMapping"), (snapshot) => {
+            if (!snapshot.size) {
+                personnelList.innerHTML = "<p class='text-gray-400' style='text-align:center;'>No delivery personnel found.<br>Add personnel to manage delivery accounts.</p>";
+                return;
+            }
+            const fragment = document.createDocumentFragment();
+            snapshot.forEach(docSnap => {
+                const data = docSnap.data();
+                const btn = document.createElement("button");
+                btn.className = "personnel-list-btn";
+                btn.innerHTML = `
+                    <i class="fas fa-user"></i>
+                    <span class="personnel-email">${docSnap.id}</span>
+                    <span class="personnel-label">${Array.isArray(data.allowedHostels) && data.allowedHostels.length ? data.allowedHostels.length + ' Hostel' + (data.allowedHostels.length > 1 ? 's' : '') : 'No Hostels'}</span>
+                    <span class="status-dot${data.isActive === false ? ' inactive' : ''}" title="${data.isActive === false ? 'Inactive' : 'Active'}"></span>
+                `;
+                btn.onclick = () => showPersonnelDetails(docSnap.id);
+                fragment.appendChild(btn);
+            });
+            personnelList.innerHTML = "";
+            personnelList.appendChild(fragment);
+        }, error => {
+            personnelList.innerHTML = "<p class='text-red-400' style='text-align:center;'>Failed to load delivery personnel.</p>";
+            showNotification("Failed to load delivery personnel. Please check permissions.", "error");
+        });
+    } catch (error) {
+        document.getElementById("personnel-list").innerHTML = "<p class='text-red-400' style='text-align:center;'>Unable to load delivery personnel.</p>";
+        showNotification("Unable to load delivery personnel.", "error");
+    }
+}
+
+async function loadFees() {
+  const container = document.getElementById("fees-list");
+  container.innerHTML = "Loading...";
+
+  const snapshot = await getDocs(collection(db, "deliveryFees"));
+  if (snapshot.empty) {
+    container.innerHTML = "<p>No delivery fees found.</p>";
+    return;
+  }
+
+  const allHostels = [
+    "Hostel A", "Hostel B", "Hostel C", 
+    "Heavens Gate Block A", "Heavens Gate Block B", "Heavens Gate Block C", 
+    "Abrempong Hostel", "Prestige Hostel"
+  ];
+
+  const feeMap = {};
+  snapshot.forEach(doc => {
+    const data = doc.data();
+    if (data.name) feeMap[data.name] = { ...data, id: doc.id };
+  });
+
+  container.innerHTML = "";
+
+  allHostels.forEach(name => {
+    const data = feeMap[name];
+    if (!data) return; // Skip if no fee exists for that hostel
+
+    const card = document.createElement("div");
+    card.className = "item";
+    card.innerHTML = `
+      <h4 class="text-white font-semibold text-lg">${data.name}</h4>
+      <p class="text-gray-300 mb-2">Delivery Fee: GH₵<span class="fee-value">${data.fee}</span></p>
+      <div class="item-actions">
+        <button class="btn btn-secondary edit-fee-btn">Edit</button>
+      </div>
+    `;
+
+    const actions = card.querySelector(".item-actions");
+    const editBtn = card.querySelector(".edit-fee-btn");
+
+    editBtn.addEventListener("click", () => {
+      actions.innerHTML = `
+        <input type="number" min="0" value="${data.fee}" class="input fee-input" placeholder="Enter fee" style="max-width:100px;">
+        <button class="btn btn-primary save-fee-btn">Save</button>
+        <button class="btn btn-tertiary cancel-fee-btn">Cancel</button>
+      `;
+
+      const feeInput = actions.querySelector(".fee-input");
+      const saveBtn = actions.querySelector(".save-fee-btn");
+      const cancelBtn = actions.querySelector(".cancel-fee-btn");
+
+      cancelBtn.addEventListener("click", () => loadFees());
+
+      saveBtn.addEventListener("click", async () => {
+        const newFee = parseFloat(feeInput.value);
+        if (isNaN(newFee) || newFee < 0) {
+          showNotification("Please enter a valid non-negative fee.", "error");
+          return;
+        }
+
+        try {
+          await setDoc(doc(db, "deliveryFees", data.id), {
+            ...data,
+            fee: newFee
+          });
+          showNotification(`Fee updated for ${data.name}`, "success");
+          loadFees();
+        } catch (err) {
+          console.error(err);
+          showNotification("Failed to update fee.", "error");
+        }
+      });
+    });
+
+    container.appendChild(card);
+  });
+}
+
+
+async function showPersonnelDetails(email) {
+    try {
+        document.getElementById("delivery").classList.add("hidden");
+        document.getElementById("personnel-details-section").classList.remove("hidden");
+
+        const detailsContent = document.getElementById("personnel-details-content");
+        detailsContent.innerHTML = `<div style="text-align:center; color:#aaa; padding:20px 0;">Loading details...</div>`;
+
+        const personnelDoc = await getDoc(doc(db, "deliveryMapping", email));
+        if (!personnelDoc.exists()) {
+            detailsContent.innerHTML = `<p class="text-red-400" style="text-align:center;">Personnel not found.</p>`;
+            return;
+        }
+        const data = personnelDoc.data();
+
+        detailsContent.innerHTML = `
+            <div class="item" style="max-width:500px;margin:auto;">
+                <h4><i class="fas fa-user"></i> ${email}</h4>
+                <p><b>Status:</b> <span style="color:${data.isActive !== false ? '#34c759' : '#ff3b30'};font-weight:600;">${data.isActive !== false ? "Active" : "Inactive"}</span></p>
+                <p><b>Hostels:</b> <span style="color:#30c8ff">${Array.isArray(data.allowedHostels) && data.allowedHostels.length ? data.allowedHostels.join(", ") : "None"}</span></p>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:15px;">
+                    <button class="btn btn-secondary" id="toggle-personnel-status">${data.isActive !== false ? "Close" : "Open"}</button>
+                    <button class="btn btn-secondary" id="edit-personnel-hostels">Edit Hostels</button>
+                    <button class="btn btn-secondary" id="delete-personnel">Delete</button>
+                </div>
+            </div>
+        `;
+
+        document.getElementById("toggle-personnel-status").onclick = async () => {
+            await updateDoc(doc(db, "deliveryMapping", email), {
+                isActive: !data.isActive,
+                updatedAt: Date.now()
+            });
+            showNotification(`Personnel "${email}" is now ${!data.isActive ? "Active" : "Inactive"}.`);
+            showPersonnelDetails(email);
+        };
+        document.getElementById("edit-personnel-hostels").onclick = async () => {
+            // 1. Use your static allowed hostels array
+            const allHostels = ["Hostel A", "Hostel B", "Hostel C", "Heavens Gate Block A", "Heavens Gate Block B","Heavens Gate Block C", "Abrempong Hostel", "Prestige Hostel"];
+
+            // 2. Build modal HTML
+            const currentHostels = Array.isArray(data.allowedHostels) ? data.allowedHostels : [];
+            const modal = document.createElement("div");
+            modal.id = "hostel-modal";
+            modal.style = `
+                position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:9999;
+                background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;
+            `;
+            modal.innerHTML = `
+                <div style="background:#232325;padding:32px 20px 20px 20px;border-radius:18px;max-width:95vw;width:340px;box-shadow:0 8px 32px rgba(0,0,0,0.18);">
+                    <h3 style="font-size:1.15rem;font-weight:600;margin-bottom:18px;color:#30c8ff;text-align:center;">Select Allowed Hostels</h3>
+                    <div id="hostel-checkboxes" style="max-height:220px;overflow-y:auto;margin-bottom:18px;">
+                        ${allHostels.length ? allHostels.map(h => `
+                            <label style="display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:1rem;">
+                                <input type="checkbox" value="${h}" ${currentHostels.includes(h) ? "checked" : ""} style="accent-color:#30c8ff;width:18px;height:18px;">
+                                <span>${h}</span>
+                            </label>
+                        `).join('') : '<span style="color:#aaa;">No hostels found.</span>'}
+                    </div>
+                    <div style="display:flex;gap:12px;justify-content:center;">
+                        <button id="hostel-modal-save" class="btn btn-secondary" style="min-width:90px;">Save</button>
+                        <button id="hostel-modal-cancel" class="btn btn-tertiary" style="min-width:90px;">Cancel</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+
+            // 3. Modal actions
+            document.getElementById("hostel-modal-cancel").onclick = () => modal.remove();
+            document.getElementById("hostel-modal-save").onclick = async () => {
+                const checked = Array.from(modal.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+                await updateDoc(doc(db, "deliveryMapping", email), {
+                    allowedHostels: checked,
+                    updatedAt: Date.now()
+                });
+                showNotification("Hostels updated successfully!");
+                modal.remove();
+                showPersonnelDetails(email);
+            };
+            // Optional: close modal on outside click
+            modal.onclick = e => { if (e.target === modal) modal.remove(); };
+        };
+    } catch (error) {
+        document.getElementById("personnel-details-content").innerHTML = `<p class="text-red-400" style="text-align:center;">Failed to load details.</p>`;
+        showNotification("Failed to load personnel details.", "error");
+    }
+}
+
+document.addEventListener("click", function(e) {
+    if (e.target && e.target.id === "back-to-personnel-list") {
+        document.getElementById("personnel-details-section").classList.add("hidden");
+        document.getElementById("delivery").classList.remove("hidden");
+        loadDeliveryPersonnel();
+    }
+});
+
+// Authentication Handling
+function updateUIForUser(user) {
+    console.log("Updating UI for user:", user ? user.email : "No user");
+    clearTimeout(loadingTimeout); // Clear timeout if auth resolves
+    loadingScreen.style.display = "none";
+    if (user && adminEmails.includes(user.email)) {
+        console.log("Admin logged in:", user.email);
+        loginSection.style.display = "none";
+        mainContent.classList.remove("hidden");
+        loadDashboard();
+        loadRestaurants();
+        loadVendorMappings();
+        loadOrders();
+        loadUsers();
+        loadDeliverySection();
+    } else {
+        console.log("No admin user detected");
+        loginSection.style.display = "flex";
+        mainContent.classList.add("hidden");
+        if (user) {
+            signOut(auth).then(() => {
+                showLoginNotification("Unauthorized: Not an admin!", "error");
+            }).catch(error => {
+                console.error("Sign out error:", error);
+                showLoginNotification("Failed to sign out.", "error");
+            });
+        }
+    }
+}
+
+// Initialize Auth Listener
+onAuthStateChanged(auth, (user) => {
+    try {
+        updateUIForUser(user);
+    } catch (error) {
+        console.error("Auth state change error:", error);
+        loadingScreen.style.display = "none";
+        loginSection.style.display = "flex";
+        mainContent.classList.add("hidden");
+        showLoginNotification("Authentication error", "error");
+    }
+}, error => {
+    console.error("Auth listener error:", error);
+    loadingScreen.style.display = "none";
+    loginSection.style.display = "flex";
+    mainContent.classList.add("hidden");
+    showLoginNotification("Authentication listener failed", "error");
+});
+
+// Fallback: Check auth state after 3 seconds if listener hasn't fired
+setTimeout(() => {
+    if (!timeoutTriggered && loadingScreen.style.display !== "none") {
+        console.warn("Auth listener hasn't fired, checking current user");
+        const user = auth.currentUser;
+        updateUIForUser(user);
+    }
+}, 3000);
+
+document.getElementById("login-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (loginBtn) {
+        loginBtn.disabled = true;
+        if (loginSpinner) loginSpinner.style.display = 'inline-block';
+    }
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        if (adminEmails.includes(user.email)) {
+            loginSection.style.display = "none";
+            mainContent.classList.remove("hidden");
+            loadDashboard();
+        } else {
+            await signOut(auth);
+            showLoginNotification("You do not have admin privileges", "error");
+        }
+    } catch (error) {
+        console.error("Login error:", error);
+        showLoginNotification(error.message, "error");
+    } finally {
+        if (loginBtn) loginBtn.disabled = false;
+        if (loginSpinner) loginSpinner.style.display = 'none';
+    }
+});
+
+
+// Add this function if not present, or update your delivery tab click handler to use it:
+function loadDeliverySection() {
+    document.getElementById("personnel-details-section").classList.add("hidden");
+    document.getElementById("delivery").classList.remove("hidden");
+    loadDeliveryPersonnel();
+}
+
+// Make sure your delivery tab button uses this:
+document.getElementById("delivery-btn").addEventListener("click", () => { 
+    toggleSection("delivery"); 
+    loadDeliverySection(); 
+});
+
+// Handle Delivery Personnel Form Submission
+document.getElementById("delivery-personnel-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = document.getElementById("personnel-email").value.trim();
+    const hostelsRaw = document.getElementById("personnel-hostels").value;
+    const allowedHostels = hostelsRaw.split(',').map(h => h.trim()).filter(Boolean);
+
+    if (!email) {
+        showNotification("Please enter an email.", "error");
+        return;
+    }
+
+    try {
+        await setDoc(doc(db, "deliveryMapping", email), {
+            email,
+            allowedHostels,
+            isDelivery: true,
+            isOpen: true,
+            createdAt: Date.now()
+        });
+        showNotification(`Delivery mapping for ${email} added successfully.`);
+        document.getElementById("personnel-email").value = "";
+        document.getElementById("personnel-hostels").value = "";
+        loadDeliveryPersonnel();
+    } catch (error) {
+        console.error("Error adding delivery mapping:", error);
+        showNotification("Failed to add delivery mapping.", "error");
+    }
+});
+
+// Event Listeners
+document.getElementById("discounts-btn").addEventListener("click", () => {
+  toggleSection("discounts");
+  loadDiscounts();
+});
+
+document.getElementById("earnings-btn").addEventListener("click", () => {
+    toggleSection("earnings");
+    loadEarnings();
+});
+
+document.getElementById("earnings-filter").addEventListener("change", loadEarnings);
+
+document.getElementById("export-csv-btn").addEventListener("click", () => {
+    if (Object.keys(latestVendorMap).length === 0) {
+        showNotification("No data available to export.", "error");
+        return;
+    }
+    exportVendorEarningsCSV(latestVendorMap, latestVendorNames);
+});
+
+
+document.getElementById("dashboard-btn").addEventListener("click", () => { 
+    toggleSection("dashboard"); 
+    loadDashboard(); 
+});
+document.getElementById("restaurants-btn").addEventListener("click", () => { 
+    toggleSection("restaurants"); 
+    loadRestaurants(); 
+});
+document.getElementById("vendor-mappings-btn").addEventListener("click", () => { 
+    toggleSection("vendor-mappings"); 
+    loadVendorMappings(); 
+    loadRestaurantsForDropdown(); 
+});
+document.getElementById("orders-btn").addEventListener("click", () => { 
+    toggleSection("orders"); 
+    loadOrders(); 
+});
+document.getElementById("users-btn").addEventListener("click", () => { 
+    toggleSection("users"); 
+    loadUsers(); 
+});
+document.getElementById("delivery-btn").addEventListener("click", () => { 
+    toggleSection("delivery"); 
+    loadDeliverySection(); 
+});
+document.getElementById("settings-btn").addEventListener("click", () => { 
+    toggleSection("settings"); 
+});
+document.getElementById("fees-btn").addEventListener("click", () => {
+  toggleSection("fees");
+  loadFees();
+});
+
+document.getElementById("logout-btn").addEventListener("click", () => {
+    signOut(auth).then(() => {
+        showLoginNotification("Logged out successfully!");
+        loadingScreen.style.display = "none";
+        loginSection.style.display = "flex";
+        mainContent.classList.add("hidden");
+    }).catch(error => {
+        console.error("Logout error:", error);
+        showNotification("Failed to logout. Please try again.", "error");
+    });
+});
+document.getElementById("update-btn").addEventListener("click", () => {
+    window.location.reload(true);
+});
+document.getElementById("vendor-tab").addEventListener("click", () => {
+    document.getElementById("vendor-earnings-group").style.display = "block";
+    document.getElementById("delivery-earnings-group").style.display = "none";
+});
+
+document.getElementById("delivery-tab").addEventListener("click", () => {
+    document.getElementById("vendor-earnings-group").style.display = "none";
+    document.getElementById("delivery-earnings-group").style.display = "block";
+});
+
+
+appBtn.addEventListener("click", () => {
+  toggleSection("app");
+  loadTrendingList();
+});
+
+
+
+let trendingDocs = [];
+
+
+// Service Worker registration (optional, keep as is if you use it)
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+            .then(registration => {
+                console.log('Service Worker registered with scope:', registration.scope);
+            })
+            .catch(error => {
+                console.error('Service Worker registration failed:', error);
+            });
+    });
+}
+    </script>
