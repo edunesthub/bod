@@ -1243,9 +1243,9 @@ const loadDiscounts = async () => {
       <p>Uses: ${data.uses ?? 0} / ${data.maxUses ?? "∞"}</p>
       ${data.expiresAt ? `<p>Expires: ${new Date(data.expiresAt).toLocaleString()}</p>` : ""}
       <div class="item-actions">
-        <button class="btn btn-secondary edit-code">Edit</button>
+        <button class=" edit-code">Edit</button>
         <button class="btn btn-tertiary toggle-code">${data.active ? "Deactivate" : "Activate"}</button>
-        <button class="btn btn-primary delete-code">Delete</button>
+        <button class=" delete-code">Delete</button>
       </div>
     `;
 
@@ -1599,7 +1599,7 @@ async function loadRestaurants() {
                 <p>Status: ${data.isOpen ? "Open" : "Closed"}</p>
                 <div class="item-actions">
                     <button class="btn btn-secondary edit-restaurant" data-id="${doc.id}">Edit</button>
-                    <button class="btn btn-secondary delete-restaurant" data-id="${doc.id}">Delete</button>
+                    <button class=" delete-restaurant" data-id="${doc.id}">Delete</button>
                 </div>
             `;
             item.querySelector(".edit-restaurant").addEventListener("click", () => editRestaurant(doc.id));
@@ -1736,7 +1736,7 @@ async function loadMenuItems(restaurantId) {
                 <p>Price: GH₵${data.price?.toFixed(2) || "Not set"}</p>
                 <div class="item-actions">
                     <button class="btn btn-secondary edit-menu-item" data-id="${doc.id}" data-restaurant-id="${restaurantId}">Edit</button>
-                    <button class="btn btn-secondary delete-menu-item" data-id="${doc.id}" data-restaurant-id="${restaurantId}">Delete</button>
+                    <button class=" delete-menu-item" data-id="${doc.id}" data-restaurant-id="${restaurantId}">Delete</button>
                 </div>
             `;
             item.querySelector(".edit-menu-item").addEventListener("click", () => editMenuItem(restaurantId, doc.id));
@@ -1958,7 +1958,7 @@ function loadOrders() {
             <p><strong>Processing Fee:</strong> GH₵${processingFee.toFixed(2)}</p>
             <p><strong>Delivery Fee:</strong> GH₵${deliveryFee.toFixed(2)}</p>
             <p class="text-white font-bold mt-1"><strong>Total:</strong> GH₵${total.toFixed(2)}</p>
-            <button class="btn btn-secondary delete-order mt-3" data-id="${orderId}">Delete</button>
+            <button class="delete-order mt-3" data-id="${orderId}"></button>
           </div>
         `;
 
@@ -2028,10 +2028,10 @@ async function loadUsers() {
                     <p><strong>Created At:</strong> ${createdAt || 'N/A'}</p>
                 </div>
                 <div class="user-actions">
-                    <button class="btn btn-secondary edit-name-btn">Edit</button>
+                    <button class="edit-name-btn"></button>
                     <button class="btn btn-secondary save-name-btn hidden">Save</button>
                     <button class="btn btn-tertiary cancel-edit-btn hidden">Cancel</button>
-                    <button class="btn btn-primary delete-user" data-id="${id}">Delete</button>
+                    <button class=" delete-user" data-id="${id}"></button>
                 </div>
             `;
 
