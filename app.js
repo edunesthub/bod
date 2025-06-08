@@ -1,1068 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="mobile-web-app-capable" content="yes">
-    <title>Chawp BOD Portal</title>
-    <link rel="manifest" href="/manifest.json">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        body { 
-            background: #1c1c1e; 
-            color: #e0e0e0; 
-            font-family: 'SF Pro Display', sans-serif; 
-            margin: 0; 
-            padding: 0 0 20px 0; 
-            min-height: 100vh; 
-            -webkit-user-select: none; 
-            -ms-user-select: none; 
-            user-select: none; 
-            -webkit-touch-callout: none; 
-            overflow-x: hidden; 
-        }
-        .container { 
-            max-width: 1200px; 
-            margin: 0 auto; 
-            padding: 30px 20px; 
-            position: relative; 
-            transition: margin-left 0.3s ease;
-        }
-        .section { 
-            background: #252527; 
-            border-radius: 20px; 
-            padding: 30px; 
-            margin-bottom: 20px; 
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6); 
-            transition: transform 0.3s ease, opacity 0.3s ease; 
-        }
-        .section.hidden { 
-            transform: translateY(20px); 
-            opacity: 0; 
-            pointer-events: none; 
-        }
-        h1 { 
-            font-size: clamp(1.5rem, 5vw, 2.5rem); 
-            font-weight: 700; 
-            letter-spacing: -2px;
-            margin: 0;
-            background: linear-gradient(45deg, #007aff, #34c759, #007aff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 4px 20px rgba(0, 122, 255, 0.3);
-            position: relative;
-            z-index: 1;
-        }
-        h2 { 
-            font-size: clamp(1.25rem, 3vw, 1.75rem); 
-            font-weight: 600; 
-            margin-bottom: 20px; 
-            text-align: center; 
-            color: #ffffff; 
-        }
-        h4 { 
-            margin: 0 0 10px; 
-            font-size: clamp(1rem, 2.5vw, 1.25rem); 
-            font-weight: 600; 
-            color: #ffffff; 
-        }
-        p { 
-            font-size: clamp(0.9rem, 2.5vw, 1.1rem); 
-            opacity: 1; 
-            color: #d0d0d0; 
-        }
-        .btn { 
-            background: linear-gradient(45deg, #34c759, #007aff);
-            color: white;
-            border: none; 
-            padding: 12px 20px;
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer; 
-            width: 100%; 
-            font-size: 16px;
-            transition: all 0.3s;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .btn-primary { 
-            background: #dc2626;
-            color: white;
-            border: none; 
-            padding: 12px 20px;
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer; 
-            width: 100%; 
-            font-size: 16px;
-            transition: all 0.3s;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .btn:hover { 
-            background: linear-gradient(135deg, #34c759, #007aff);
-            transform: translateY(-2px); 
-            box-shadow: 0 6px 15px rgba(255, 45, 85, 0.4);
-        }
-        .btn:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 5px rgba(45, 174, 255, 0.2);
-        }
-        .btn:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-            transform: none;
-        }
-        .btn-spinner {
-            display: none;
-            width: 16px;
-            height: 16px;
-            border: 2px solid rgba(255, 255, 255, 0.5);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
-            margin-left: 8px;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        .btn-secondary { 
-            background: #30c8ff; 
-            padding: 8px 18px; 
-            width: auto;
-        }
-        .btn-secondary:hover { 
-            background: #26a5dc; 
-        }
-        .btn-tertiary {
-            background: #6b7280;
-            padding: 8px 18px;
-            width: auto;
-        }
-        .btn-tertiary:hover {
-            background: #4b5563;
-        }
-        .input { 
-            background: #343436; 
-            border: none; 
-            color: #ccc; 
-            padding: 14px; 
-            border-radius: 12px; 
-            width: 100%; 
-            margin-bottom: 15px; 
-            font-size: clamp(0.875rem, 2.5vw, 1rem); 
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3); 
-            transition: background 0.2s ease, transform 0.2s ease; 
-        }
-        .input:focus { 
-            background: #3a3a3c; 
-            outline: none; 
-            transform: scale(1.02); 
-        }
-        .notification { 
-            position: fixed; 
-            top: 20px; 
-            left: 50%; 
-            transform: translateX(-50%); 
-            background: rgba(52, 199, 89, 0.9);
-            color: white;
-            padding: 12px 15px;
-            border-radius: 10px;
-            text-align: left;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 14px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            border-left: 4px solid #34C759;
-            z-index: 1000; 
-            opacity: 0; 
-            transition: opacity 0.3s ease; 
-        }
-        .notification.show { 
-            opacity: 1; 
-        }
-        .notification.error { 
-            background: rgba(255, 59, 48, 0.9);
-            border-left-color: #FF3B30;
-        }
-        .notification-icon {
-            font-size: 18px;
-        }
-        .item { 
-            background: #2c2c2e; 
-            padding: 20px; 
-            border-radius: 14px; 
-            margin-bottom: 15px; 
-            transition: transform 0.2s ease, box-shadow 0.2s ease; 
-        }
-        .item:hover { 
-            transform: translateY(-3px); 
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4); 
-        }
-        .item h4 { 
-            margin: 0 0 10px; 
-            font-size: clamp(1rem, 2.5vw, 1.25rem); 
-            font-weight: 600; 
-            color: #ffffff; 
-        }
-        .item p { 
-            margin: 5px 0; 
-            font-size: clamp(0.85rem, 2vw, 0.95rem); 
-            color: #d0d0d0; 
-        }
-        .item-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        .sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 240px;
-    height: 100%;
-    background: rgba(15, 15, 17, 0.98);
-    backdrop-filter: blur(8px);
-    padding: 30px 20px;
-    display: flex;
-    flex-direction: column;
-                position: fixed;
-            top: 0;
-            left: -250px;
-            width: 250px;
-            height: 100%;
-            background: rgba(44, 44, 46, 0.95);
-            backdrop-filter: blur(20px);
-            padding: 20px 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            box-shadow: 2px 0 40px rgba(0, 0, 0, 0.6);
-            z-index: 1000;
-            transition: left 0.3s ease;
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .sidebar.open {
-            left: 0;
-        }
-        .sidebar-toggle {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: #007aff;
-            color: #fff;
-            border: none;
-            padding: 10px;
-            border-radius: 10px;
-            cursor: pointer;
-            z-index: 1100;
-            font-size: 1.3rem;
-            transition: all 0.3s ease;
-        }
-        .sidebar-toggle:hover {
-            background: #005bb5;
-            transform: scale(1.1);
-        }
-        .sidebar button {
-            background: none;
-            color: #b0b0b0;
-            padding: 20px;
-            font-size: clamp(0.9rem, 2vw, 1rem);
-            font-weight: 500;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-align: left;
-            width: 100%;
-        }
-        .sidebar button i {
-            font-size: clamp(1.2rem, 2.5vw, 1.5rem);
-        }
-        .sidebar button.active {
-            background: #007aff;
-            color: #fff;
-            box-shadow: 0 2px 10px rgba(0, 122, 255, 0.4);
-        }
-        .sidebar button:hover:not(.active) {
-            color: #fff;
-            background: rgba(255, 255, 255, 0.15);
-        }
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-            display: none;
-            transition: opacity 0.3s ease;
-        }
-        .overlay.active {
-            display: block;
-            opacity: 1;
-        }
-        #login-section { 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-            padding: 20px; 
-            background: linear-gradient(135deg, #1c1c1e 0%, #252527 100%); 
-            z-index: 2000; 
-            overflow: hidden; 
-        }
-        #login-section::before { 
-            content: ''; 
-            position: absolute; 
-            top: -50%; 
-            left: -50%; 
-            width: 200%; 
-            height: 200%; 
-            background: radial-gradient(circle, rgba(0, 122, 255, 0.1) 0%, transparent 70%); 
-            animation: pulse 10s infinite; 
-            z-index: 0; 
-        }
-        #login-section .login-container { 
-            background: #2c2c2e; 
-            border-radius: 20px; 
-            padding: 40px; 
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6); 
-            width: 100%; 
-            max-width: 400px; 
-            z-index: 1; 
-            animation: fadeIn 0.5s ease; 
-        }
-        #login-section h1 { 
-            font-size: clamp(1.5rem, 5vw, 2.5rem); 
-            font-weight: 700; 
-            text-align: center; 
-            margin-bottom: 30px; 
-            background: linear-gradient(45deg, #007aff, #34c759); 
-            -webkit-background-clip: text; 
-            background-clip: text; 
-            color: transparent; 
-        }
-        #login-section.hidden { 
-            display: none; 
-        }
-        .user-item {
-            background: #2c2c2e;
-            padding: 20px;
-            border-radius: 14px;
-            margin-bottom: 15px;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 15px;
-            align-items: center;
-        }
-        .user-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
-        }
-        .user-details {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        .user-details h4 {
-            margin: 0;
-            font-size: clamp(1rem, 2.5vw, 1.25rem);
-            font-weight: 600;
-            color: #ffffff;
-        }
-        .user-details p {
-            margin: 0;
-            font-size: clamp(0.85rem, 2vw, 0.95rem);
-            color: #d0d0d0;
-            word-break: break-word;
-        }
-        .user-actions {
-            display: flex;
-            gap: 10px;
-        }
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        .dashboard-card {
-            background: #2c2c2e;
-            padding: 25px;
-            border-radius: 16px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .dashboard-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-        }
-        .dashboard-card:after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-        }
-        .dashboard-card.restaurants:after { 
-            background: linear-gradient(90deg, #FF9500, #FF2D55); 
-            box-shadow: 0 0 15px rgba(255, 149, 0, 0.3);
-        }
-        
-        .dashboard-card.orders:after { 
-            background: linear-gradient(90deg, #34C759, #32D74B); 
-            box-shadow: 0 0 15px rgba(52, 199, 89, 0.3);
-        }
-        .dashboard-card.users:after { 
-            background: linear-gradient(90deg, #AF52DE, #5E5CE6); 
-            box-shadow: 0 0 15px rgba(175, 82, 222, 0.3);
-        }
-        .dashboard-card.deliveries:after { 
-            background: linear-gradient(90deg, #FF2D55, #FF9500); 
-            box-shadow: 0 0 15px rgba(255, 45, 85, 0.3);
-        }
-        .dashboard-card h3 {
-            font-size: clamp(1.1rem, 2.5vw, 1.3rem);
-            font-weight: 600;
-            color: #ffffff;
-            margin-bottom: 6px;
-            position: relative;
-            z-index: 1;
-        }
-        .dashboard-card .subtitle {
-            font-size: 0.85rem;
-            color: #a0a0a0;
-            margin-bottom: 15px;
-        }
-        .dashboard-card p {
-            font-size: clamp(1.8rem, 3.5vw, 2.5rem);
-            font-weight: 700;
-            margin: 0;
-            position: relative;
-            z-index: 1;
-        }
-        .dashboard-card.restaurants p { background: linear-gradient(45deg, #FF9500, #FF2D55); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .dashboard-card.orders p { background: linear-gradient(45deg, #34C759, #32D74B); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .dashboard-card.users p { background: linear-gradient(45deg, #AF52DE, #5E5CE6); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .dashboard-card.deliveries p { background: linear-gradient(45deg, #FF2D55, #FF9500); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .dashboard-card i {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            font-size: 1.5rem;
-            opacity: 0.2;
-            color: #ffffff;
-        }
-        .mini-chart {
-            width: 100%;
-            height: 15px !important;
-            margin-top: 10px;
-            margin-bottom: 5px;
-            max-height: 15px !important;
-            overflow: hidden;
-            border-radius: 5px;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
-        }
-        .tooltip {
-            position: absolute;
-            top: -40px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            z-index: 100;
-            white-space: nowrap;
-        }
-        .tooltip:after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-left: 6px solid transparent;
-            border-right: 6px solid transparent;
-            border-top: 6px solid rgba(0, 0, 0, 0.8);
-        }
-        .dashboard-card:hover .tooltip {
-            opacity: 1;
-            top: -50px;
-        }
-        .welcome-message {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 25px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01));
-            padding: 20px;
-            border-radius: 16px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        .welcome-text {
-            flex: 1;
-        }
-        .welcome-text p {
-            font-size: 0.95rem;
-            color: #a0a0a0;
-            margin: 0;
-        }
-        .date-display {
-            font-size: 0.9rem;
-            color: #a0a0a0;
-            text-align: right;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-        }
-        .password-wrapper {
-            position: relative;
-            width: 100%;
-        }
-        .password-toggle {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: #a0a0a0;
-            cursor: pointer;
-            z-index: 10;
-            padding: 8px;
-        }
-        .password-toggle:hover {
-            color: #ffffff;
-        }
-        .personnel-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: clamp(0.85rem, 2vw, 0.95rem);
-            color: #d0d0d0;
-        }
-        .personnel-table th,
-        .personnel-table td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .personnel-table th {
-            color: #ffffff;
-            font-weight: 600;
-        }
-        .personnel-table .btn-secondary {
-            width: auto;
-            padding: 6px 12px;
-            font-size: 0.9rem;
-        }
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 60px;
-            height: 34px;
-            margin: 10px 0;
-        }
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 34px;
-        }
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 26px;
-            width: 26px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-        input:checked + .slider {
-            background-color: #34C759;
-        }
-        input:checked + .slider:before {
-            transform: translateX(26px);
-        }
-        @media (max-width: 768px) {
-            .container { 
-                padding: 20px 15px; 
-            }
-            .section { padding: 25px; }
-            .sidebar { width: 200px; }
-            .sidebar-toggle { 
-                padding: 8px; 
-                font-size: 1rem; 
-            }
-            .sidebar button { 
-                padding: 10px; 
-                font-size: clamp(0.85rem, 2vw, 0.95rem); 
-            }
-            .sidebar button i { 
-                font-size: clamp(1.1rem, 2vw, 1.3rem); 
-            }
-            #login-section .login-container { padding: 30px; }
-            .user-item { grid-template-columns: 1fr; }
-            .user-actions { margin-top: 10px; justify-content: flex-end; }
-            .personnel-table { font-size: 0.8rem; }
-            .personnel-table th, .personnel-table td { padding: 8px; }
-        }
-        @media (max-width: 480px) {
-            .container { 
-                padding: 15px 10px; 
-            }
-            .section { padding: 20px; }
-            .sidebar { width: 180px; }
-            .sidebar-toggle { 
-                padding: 6px; 
-                font-size: 0.9rem; 
-            }
-            .sidebar button { 
-                padding: 20px; 
-                font-size: clamp(0.9rem, 1.8vw, 0.9rem); 
-            }
-            .sidebar button i { 
-                font-size: clamp(1rem, 2vw, 1.2rem); 
-            }
-            #login-section .login-container { 
-                padding: 20px; 
-                max-width: 90%; 
-            }
-            .personnel-table { font-size: 0.75rem; }
-            .personnel-table th, .personnel-table td { padding: 6px; }
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.2); opacity: 0.3; }
-            100% { transform: scale(1); opacity: 0.5; }
-        }
-        html, body {
-            height: 100%;
-            min-height: -webkit-fill-available;
-            overscroll-behavior-y: none;
-            overflow-x: hidden;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-            touch-action: manipulation;
-        }
-        body::-webkit-scrollbar {
-            display: none;
-        }
-
-        /* --- Remove unused CSS for deleted sections --- */
-        .dashboard-card.deliveries:after { display: none !important; }
-        .dashboard-card.deliveries p { color: inherit !important; background: none !important; }
-        .mini-chart { display: none !important; }
-
-        /* Delivery Personnel List Section (only this part updated) */
-        h2.text-xl.font-semibold.mb-4 {
-            margin-bottom: 16px;
-            font-size: 1.5rem;
-        }
-        #personnel-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 18px;
-            min-height: 60px;
-        }
-        #personnel-list div {
-            text-align: center;
-            color: #aaa;
-            padding: 20px 0;
-        }
-        /* Add or update these styles in your <style> tag */
-        .personnel-list-btn {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            background: linear-gradient(120deg, #232325 80%, #232325 100%);
-            border: none;
-            border-radius: 18px;
-            padding: 20px 22px;
-            margin-bottom: 0;
-            width: 100%;
-            font-size: 1.08rem;
-            color: #e0e0e0;
-            font-weight: 600;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.10);
-            transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
-            cursor: pointer;
-            text-align: left;
-            position: relative;
-            min-height: 64px;
-            border: 1.5px solid #232325;
-            outline: none;
-            border-color: #30c8ff;
-        }
-        .personnel-list-btn:hover, .personnel-list-btn:focus {
-            background: linear-gradient(120deg, #2a2a2c 80%, #30c8ff 100%);
-            color: #fff;
-            transform: translateY(-2px) scale(1.01);
-            box-shadow: 0 6px 18px rgba(0,122,255,0.10);
-            border-color: #30c8ff;
-        }
-        .personnel-list-btn .fa-user {
-            color: #30c8ff;
-            font-size: 1.5rem;
-            background: #18181a;
-            border-radius: 50%;
-            padding: 10px;
-            box-shadow: 0 2px 8px rgba(48,200,255,0.10);
-        }
-        .personnel-list-btn .personnel-email {
-            font-weight: 700;
-            color: #fff;
-            font-size: 1.08rem;
-            letter-spacing: 0.01em;
-            word-break: break-all;
-        }
-        .personnel-list-btn .personnel-label {
-            background: #30c8ff;
-            color: #fff;
-            font-size: 0.85em;
-            border-radius: 8px;
-            padding: 2px 10px;
-            margin-left: 10px;
-            font-weight: 500;
-            letter-spacing: 0.01em;
-        }
-        .personnel-list-btn .status-dot {
-            margin-left: auto;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: #34c759;
-            display: inline-block;
-            border: 2px solid #232325;
-            box-shadow: 0 0 0 2px #232325;
-        }
-        .personnel-list-btn .status-dot.inactive {
-            background: #ff3b30;
-        }
-        @media (max-width: 600px) {
-            #personnel-list { grid-template-columns: 1fr !important; }
-            .personnel-list-btn { padding: 14px 10px; font-size: 0.98rem; min-height: 54px; }
-        }
-
-    </style>
-</head>
-<body>
-    <div id="loading-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #1c1c1e; display: flex; align-items: center; justify-content: center; z-index: 3000;">
-        <h1 style="font-size: 3rem; font-weight: 600; letter-spacing: -2px; background: linear-gradient(45deg, #007aff, #34c759, #007aff); -webkit-background-clip: text; background-clip: text; color: transparent;">CHAWP</h1>
-    </div>
-
-    <button class="sidebar-toggle" id="sidebar-toggle">
-        <i class="fas fa-bars"></i>
-    </button>
-
-    <div class="sidebar" id="sidebar">
-        <p></p><br><br>
-        <button id="dashboard-btn" class="active"><i class="fas fa-chart-line"></i> Dashboard</button>
-        <button id="users-btn"><i class="fas fa-users"></i> Users</button>
-        <button id="earnings-btn"><i class="fas fa-coins"></i> Earnings</button>
-        <button id="orders-btn"><i class="fas fa-shopping-cart"></i> Orders</button>
-        <button id="settings-btn"><i class="fas fa-cog"></i> Settings</button>
-    </div>
-
-    <div class="overlay" id="overlay"></div>
-
-    <div id="login-section" class="section" style="display: none;">
-        <div class="login-container">
-            <h1>Admin Portal</h1>
-            <div id="login-notification" class="notification" style="position: relative; width: 100%; display: none;">
-                <i class="fas fa-info-circle notification-icon"></i>
-                <span id="login-notification-message"></span>
-            </div>
-            <form id="login-form">
-                <input type="email" id="email" placeholder="Email" class="input">
-                <div class="password-wrapper">
-                    <input type="password" id="password" placeholder="Password" class="input">
-                    <button type="button" class="password-toggle" id="password-toggle">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                </div>
-                <button type="submit" id="login-btn" class="btn">
-                    <span>Login</span>
-                    <span class="btn-spinner" id="login-spinner"></span>
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <div id="main-content" class="container hidden">
-        <h1 class="text-4xl font-semibold text-center mb-4">Chawp BOD Portal</h1>
-        <p class="text-center text-gray-400 mb-12">Oversee the entire Chawp ecosystem.</p>
-
-        <div id="notification" class="notification"></div>
-
-        <div id="dashboard" class="section">
-            
-            <div id="delivery">
-                <div class="welcome-message">
-                <div class="welcome-text">
-                    <p>Here's what's happening with your platform today</p>
-                </div>
-                <div class="date-display" id="current-date">Loading...</div>
-            </div>
-</div>
-            <div class="dashboard-grid" id="dashboard-grid"></div>
-        
-        </div>
-
-       <div id="earnings" class="section hidden">
-    <h2 class="text-2xl font-semibold mb-4">Earnings Overview</h2>
-
-    <!-- Date Filter (Shared) -->
-    <div class="mb-4">
-        <select id="earnings-filter" class="input" style="max-width: 220px;">
-            <option value="all">All Time</option>
-            <option value="today">Today</option>
-            <option value="7days">Last 7 Days</option>
-            <option value="month">This Month</option>
-        </select>
-    </div>
-
-    <!-- Shared Dashboard -->
-    <div class="dashboard-grid mb-6" id="earnings-dashboard">
-        <div class="dashboard-card">
-            <h3>Total Revenue</h3>
-            <p id="total-revenue">GH₵0.00</p>
-        </div>
-        <div class="dashboard-card">
-            <h3>Pending Payouts</h3>
-            <p id="pending-payouts">GH₵0.00</p>
-        </div>
-    </div>
-
-    <!-- Tabs for Vendor / Delivery -->
-    <div class="flex mb-6 gap-4">
-        <button id="vendor-tab" class="btn btn-secondary">Vendor Earnings</button>
-        <button id="delivery-tab" class="btn btn-secondary">Delivery Earnings</button>
-    </div>
-
-    <div class="relative mb-4" style="text-align: right;">
-    <button id="export-toggle" class="btn btn-secondary" style="width: auto; padding: 10px 16px;">
-        <i class="fas fa-file-export mr-2"></i> Export <i class="fas fa-caret-down ml-2"></i>
-    </button>
-    <div id="export-menu" class="hidden absolute right-0 mt-2 w-40 bg-[#2c2c2e] border border-[#444] rounded-lg shadow-lg z-50">
-        <button id="export-csv-btn" class="w-full text-left px-4 py-2 hover:bg-[#3a3a3c] flex items-center gap-2">
-            <i class="fas fa-file-csv"></i> CSV
-        </button>
-        <button id="export-pdf-btn" class="w-full text-left px-4 py-2 hover:bg-[#3a3a3c] flex items-center gap-2">
-            <i class="fas fa-file-pdf"></i> PDF
-        </button>
-        <button id="export-excel-btn" class="w-full text-left px-4 py-2 hover:bg-[#3a3a3c] flex items-center gap-2">
-            <i class="fas fa-file-excel"></i> Excel
-        </button>
-    </div>
-</div>
-
-
-
-
-     <!-- Vendor Earnings List -->
-    <div id="vendor-earnings-group">
-        <h2 class="text-xl font-semibold mb-2">Vendor Earnings</h2>
-        <div id="vendor-earnings-list"></div>
-    </div>
-
-    <!-- Delivery Earnings List -->
-    <div id="delivery-earnings-group" style="display: none;">
-        <h2 class="text-xl font-semibold mb-2">Delivery Earnings</h2>
-        <div id="delivery-earnings-list">
-         <!-- delivery-earnings-list is dynamically filled by JS -->
-
-        </div>
-    </div>
-</div>
-
-
-
-        <div id="restaurants" class="section hidden">
-            <h2 class="text-2xl font-semibold mb-4">Manage Restaurants</h2>
-            <form id="restaurant-form" class="mb-6">
-                <input type="text" id="restaurant-name" placeholder="Restaurant Name" class="input">
-                <input type="text" id="restaurant-image" placeholder="Image URL" class="input">
-                <input type="number" id="delivery_time" placeholder="Delivery Time (minutes)" class="input" min="0">
-                <button type="submit" class="btn w-full">Add Restaurant</button>
-            </form>
-            <div id="restaurant-list"></div>
-        </div>
-
-        <div id="edit-restaurant" class="section hidden">
-            <h2 class="text-2xl font-semibold mb-4">Edit Restaurant</h2>
-            <form id="edit-restaurant-form" class="mb-6">
-                <input type="hidden" id="edit-restaurant-id">
-                <input type="text" id="edit-restaurant-name" placeholder="Restaurant Name" class="input">
-                <input type="text" id="edit-restaurant-image" placeholder="Image URL" class="input">
-                <input type="number" id="edit-delivery-time" placeholder="Delivery Time (minutes)" class="input" min="0">
-                <div class="toggle-switch">
-                    <input type="checkbox" id="edit-restaurant-status">
-                    <label class="slider" for="edit-restaurant-status"></label>
-                </div>
-                <p>Status: <span id="status-text">Closed</span></p>
-                <div style="display: flex; gap: 10px;">
-                    <button type="submit" class="btn">Save Changes</button>
-                    <button type="button" id="edit-menu-btn" class="btn btn-secondary">Edit Menu</button>
-                    <button type="button" id="cancel-edit" class="btn btn-tertiary">Cancel</button>
-                </div>
-            </form>
-        </div>
-
-        <div id="edit-menu" class="section hidden">
-            <h2 class="text-2xl font-semibold mb-4">Edit Menu</h2>
-            <input type="hidden" id="current-restaurant-id">
-            <form id="menu-item-form" class="mb-6">
-                <input type="text" id="menu-item-name" placeholder="Item Name" class="input">
-                <input type="number" id="menu-item-price" placeholder="Price (GH₵)" class="input" min="0" step="0.01">
-                <button type="submit" class="btn w-full">Add Menu Item</button>
-            </form>
-            <div id="menu-item-list"></div>
-            <button id="back-to-edit-restaurant" class="btn btn-tertiary mt-4">Back to Edit Restaurant</button>
-        </div>
-
-        <div id="vendor-mappings" class="section hidden">
-            <h2 class="text-2xl font-semibold mb-4">Vendor Mappings</h2>
-            <form id="vendor-mapping-form" class="mb-6">
-                <input type="email" id="vendor-email" placeholder="Vendor Email" class="input">
-                <select id="vendor-restaurant" class="input" 
-                style="padding: 16px 16px; font-size: 16px; border-radius: 8px; border: 1px solid #656565; width: 100%; max-width: 400px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                <option value="" disabled selected>Select Restaurant</option>
-            </select>
-            
-                <button type="submit" class="btn w-full">Add Mapping</button>
-            </form>
-            <div id="vendor-mapping-list"></div>
-        </div>
-
-        <div id="orders" class="section hidden">
-            <h2 class="text-2xl font-semibold mb-4">View Orders</h2>
-            <div id="orders-list"></div>
-        </div>
-
-        <div id="users" class="section hidden">
-  <h2 class="text-2xl font-semibold mb-4">Manage Users</h2>
-  <div id="users-list"></div>
-</div>
-
-
-
-
-<!-- Personnel Details Section -->
-<div id="personnel-details-section" class="section hidden">
-</div>
-
-        <div id="settings" class="section hidden">
-            <h2 class="text-2xl font-semibold mb-4">Settings</h2>
-            <p>Manage your admin settings below.</p>
-            <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
-                <button id="logout-btn" class="btn btn-primary">Logout</button>
-                <button id="update-btn" class="btn">Force Update</button>
-            </div>
-            
-        </div>
-
-        <!-- ✅ APP SECTION (Add this inside your <body> tag) -->
-<div id="app" class="section hidden">
-  <h2 class="text-2xl font-semibold mb-4">App Settings</h2>
-  <p class="text-white mb-3">Toggle trending status and reorder</p>
-  
-  <div id="trending-toggle-list" class="mb-4"></div> <!-- ⬅️ NEW toggle list -->
-
-  <p class="text-white mb-2">Set custom trending order below</p>
-<div id="trending-order-list" class="mb-3"></div>
-
-</div>
-
-<div id="fees" class="section hidden">
-  <h2 class="text-2xl font-semibold mb-4">Manage Delivery Fees</h2>
-  <div id="fees-list" class="space-y-4"></div>
-</div>
-
-<div id="discounts" class="section hidden">
-  <h2 class="text-2xl font-semibold mb-4">Manage Discount Codes</h2>
-  <form id="add-discount-form" class="space-y-3">
-    <input type="text" placeholder="Code (e.g. CHAWP10)" required id="discount-code" class="input">
-    <select id="discount-type" class="input">
-      <option value="percent">Percent (%)</option>
-      <option value="flat">Flat Amount (GH₵)</option>
-    </select>
-<select id="discount-applies-to" class="input" required>
-  <option value="subtotal">Subtotal (Food + Processing)</option>
-  <option value="delivery">Delivery Fee Only</option>
-</select>
-<input type="number" id="discount-value" placeholder="Discount Amount" class="input" required>
-    <input type="number" id="discount-max-uses" placeholder="Max Uses (optional)" class="input">
-    <input type="datetime-local" id="discount-expiry" class="input">
-<div style="display: flex; align-items: center; gap: 12px;">
-  <label for="discount-active" style="color: #e0e0e0; font-weight: 500;">Active</label>
-  <label class="toggle-switch">
-    <input type="checkbox" id="discount-active" checked>
-    <span class="slider"></span>
-  </label>
-</div>
-    <button class="btn btn-primary" type="submit">Add Discount Code</button>
-  </form>
-  <hr class="my-4">
-  <div id="discount-list" class="space-y-3"></div>
-</div>
-
-
-
-    <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
 import {
   getFirestore, doc, setDoc, getDoc, collection, addDoc, getDocs,
   deleteDoc, updateDoc, query, onSnapshot, where, orderBy
@@ -1114,6 +50,7 @@ const usersList = document.getElementById("users-list");
 const sidebar = document.getElementById("sidebar");
 const sidebarToggle = document.getElementById("sidebar-toggle");
 const overlay = document.getElementById("overlay");
+const deliveryPersonnelForm = document.getElementById("delivery-personnel-form");
 const exportToggle = document.getElementById("export-toggle");
 const exportMenu = document.getElementById("export-menu");
 
@@ -1872,7 +809,8 @@ function loadDashboard() {
             const cards = [
                   { id: "users", title: "Users", count: userCount, icon: "fa-users", tooltip: "Total users" },
                    { id: "orders", title: "Orders", count: orderCount, icon: "fa-shopping-cart", tooltip: "Total orders" },
-                { id: "restaurants", title: "Restaurants", count: restaurantCount, icon: "fa-store", tooltip: "Total restaurants" }
+                { id: "restaurants", title: "Restaurants", count: restaurantCount, icon: "fa-store", tooltip: "Total restaurants" },
+                { id: "vendors", title: "Vendors", count: vendorCount, icon: "fa-user-tie", tooltip: "Total vendors" }
             ];
             
             cards.forEach(card => {
@@ -2022,6 +960,7 @@ async function loadUsers() {
             item.innerHTML = `
                 <div class="user-details">
                     <h4 class="name-display">${name}</h4>
+                    <input type="text" class="edit-name input hidden" value="${name}" style="max-width: 100%;" />
                     <p><strong>User ID:</strong> ${userId}</p>
                     <p><strong>Phone:</strong> ${phone}</p>
                     <p><strong>Email:</strong> ${email}</p>
@@ -2377,6 +1316,102 @@ async function loadFees() {
 }
 
 
+async function showPersonnelDetails(email) {
+    try {
+        document.getElementById("delivery").classList.add("hidden");
+        document.getElementById("personnel-details-section").classList.remove("hidden");
+
+        const detailsContent = document.getElementById("personnel-details-content");
+        detailsContent.innerHTML = `<div style="text-align:center; color:#aaa; padding:20px 0;">Loading details...</div>`;
+
+        const personnelDoc = await getDoc(doc(db, "deliveryMapping", email));
+        if (!personnelDoc.exists()) {
+            detailsContent.innerHTML = `<p class="text-red-400" style="text-align:center;">Personnel not found.</p>`;
+            return;
+        }
+        const data = personnelDoc.data();
+
+        detailsContent.innerHTML = `
+            <div class="item" style="max-width:500px;margin:auto;">
+                <h4><i class="fas fa-user"></i> ${email}</h4>
+                <p><b>Status:</b> <span style="color:${data.isActive !== false ? '#34c759' : '#ff3b30'};font-weight:600;">${data.isActive !== false ? "Active" : "Inactive"}</span></p>
+                <p><b>Hostels:</b> <span style="color:#30c8ff">${Array.isArray(data.allowedHostels) && data.allowedHostels.length ? data.allowedHostels.join(", ") : "None"}</span></p>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:15px;">
+                    <button class="btn btn-secondary" id="toggle-personnel-status">${data.isActive !== false ? "Close" : "Open"}</button>
+                    <button class="btn btn-secondary" id="edit-personnel-hostels">Edit Hostels</button>
+                    <button class="btn btn-secondary" id="delete-personnel">Delete</button>
+                </div>
+            </div>
+        `;
+
+        document.getElementById("toggle-personnel-status").onclick = async () => {
+            await updateDoc(doc(db, "deliveryMapping", email), {
+                isActive: !data.isActive,
+                updatedAt: Date.now()
+            });
+            showNotification(`Personnel "${email}" is now ${!data.isActive ? "Active" : "Inactive"}.`);
+            showPersonnelDetails(email);
+        };
+        document.getElementById("edit-personnel-hostels").onclick = async () => {
+            // 1. Use your static allowed hostels array
+            const allHostels = ["Hostel A", "Hostel B", "Hostel C", "Heavens Gate Block A", "Heavens Gate Block B","Heavens Gate Block C", "Abrempong Hostel", "Prestige Hostel"];
+
+            // 2. Build modal HTML
+            const currentHostels = Array.isArray(data.allowedHostels) ? data.allowedHostels : [];
+            const modal = document.createElement("div");
+            modal.id = "hostel-modal";
+            modal.style = `
+                position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:9999;
+                background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;
+            `;
+            modal.innerHTML = `
+                <div style="background:#232325;padding:32px 20px 20px 20px;border-radius:18px;max-width:95vw;width:340px;box-shadow:0 8px 32px rgba(0,0,0,0.18);">
+                    <h3 style="font-size:1.15rem;font-weight:600;margin-bottom:18px;color:#30c8ff;text-align:center;">Select Allowed Hostels</h3>
+                    <div id="hostel-checkboxes" style="max-height:220px;overflow-y:auto;margin-bottom:18px;">
+                        ${allHostels.length ? allHostels.map(h => `
+                            <label style="display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:1rem;">
+                                <input type="checkbox" value="${h}" ${currentHostels.includes(h) ? "checked" : ""} style="accent-color:#30c8ff;width:18px;height:18px;">
+                                <span>${h}</span>
+                            </label>
+                        `).join('') : '<span style="color:#aaa;">No hostels found.</span>'}
+                    </div>
+                    <div style="display:flex;gap:12px;justify-content:center;">
+                        <button id="hostel-modal-save" class="btn btn-secondary" style="min-width:90px;">Save</button>
+                        <button id="hostel-modal-cancel" class="btn btn-tertiary" style="min-width:90px;">Cancel</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+
+            // 3. Modal actions
+            document.getElementById("hostel-modal-cancel").onclick = () => modal.remove();
+            document.getElementById("hostel-modal-save").onclick = async () => {
+                const checked = Array.from(modal.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+                await updateDoc(doc(db, "deliveryMapping", email), {
+                    allowedHostels: checked,
+                    updatedAt: Date.now()
+                });
+                showNotification("Hostels updated successfully!");
+                modal.remove();
+                showPersonnelDetails(email);
+            };
+            // Optional: close modal on outside click
+            modal.onclick = e => { if (e.target === modal) modal.remove(); };
+        };
+    } catch (error) {
+        document.getElementById("personnel-details-content").innerHTML = `<p class="text-red-400" style="text-align:center;">Failed to load details.</p>`;
+        showNotification("Failed to load personnel details.", "error");
+    }
+}
+
+document.addEventListener("click", function(e) {
+    if (e.target && e.target.id === "back-to-personnel-list") {
+        document.getElementById("personnel-details-section").classList.add("hidden");
+        document.getElementById("delivery").classList.remove("hidden");
+        loadDeliveryPersonnel();
+    }
+});
+
 // Authentication Handling
 function updateUIForUser(user) {
     console.log("Updating UI for user:", user ? user.email : "No user");
@@ -2473,6 +1508,36 @@ function loadDeliverySection() {
 
 
 
+// Handle Delivery Personnel Form Submission
+document.getElementById("delivery-personnel-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = document.getElementById("personnel-email").value.trim();
+    const hostelsRaw = document.getElementById("personnel-hostels").value;
+    const allowedHostels = hostelsRaw.split(',').map(h => h.trim()).filter(Boolean);
+
+    if (!email) {
+        showNotification("Please enter an email.", "error");
+        return;
+    }
+
+    try {
+        await setDoc(doc(db, "deliveryMapping", email), {
+            email,
+            allowedHostels,
+            isDelivery: true,
+            isOpen: true,
+            createdAt: Date.now()
+        });
+        showNotification(`Delivery mapping for ${email} added successfully.`);
+        document.getElementById("personnel-email").value = "";
+        document.getElementById("personnel-hostels").value = "";
+        loadDeliveryPersonnel();
+    } catch (error) {
+        console.error("Error adding delivery mapping:", error);
+        showNotification("Failed to add delivery mapping.", "error");
+    }
+});
+
 
 
 document.getElementById("earnings-btn").addEventListener("click", () => {
@@ -2552,7 +1617,3 @@ if ('serviceWorker' in navigator) {
             });
     });
 }
-    </script>
-    </div>
-</body>
-</html>
