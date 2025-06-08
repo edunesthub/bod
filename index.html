@@ -811,7 +811,9 @@
         <p></p><br><br>
         <button id="dashboard-btn" class="active"><i class="fas fa-chart-line"></i> Dashboard</button>
         <button id="users-btn"><i class="fas fa-users"></i> Users</button>
+        <!-- earnings
         <button id="earnings-btn"><i class="fas fa-coins"></i> Earnings</button>
+        -->
         <button id="orders-btn"><i class="fas fa-shopping-cart"></i> Orders</button>
         <button id="settings-btn"><i class="fas fa-cog"></i> Settings</button>
     </div>
@@ -861,7 +863,7 @@
         
         </div>
 
-       <div id="earnings" class="section hidden">
+       <div id="" class="section hidden">
     <h2 class="text-2xl font-semibold mb-4">Earnings Overview</h2>
 
     <!-- Date Filter (Shared) -->
@@ -1006,7 +1008,6 @@
 
         <div id="settings" class="section hidden">
             <h2 class="text-2xl font-semibold mb-4">Settings</h2>
-            <p>Manage your admin settings below.</p>
             <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
                 <button id="logout-btn" class="btn btn-primary">Logout</button>
                 <button id="update-btn" class="btn">Force Update</button>
@@ -1087,7 +1088,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
-const adminEmails = ["admin@gmail.com"];
+const adminEmails = ["admin@gmail.com", "bod@chawp.me"];
 let latestVendorMap = {};
 let latestVendorNames = {};
 
@@ -2474,11 +2475,12 @@ function loadDeliverySection() {
 
 
 
-
+/* earnings
 document.getElementById("earnings-btn").addEventListener("click", () => {
     toggleSection("earnings");
     loadEarnings();
 });
+*/
 
 document.getElementById("earnings-filter").addEventListener("change", loadEarnings);
 
